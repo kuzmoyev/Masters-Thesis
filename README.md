@@ -1,4 +1,4 @@
-Multi-instrument music transcription
+# Multi-instrument music transcription
 
 Research and choose appropriate method for making transcriptions in form of musical score from a multi-instrument recording of a musical composition in a selected genre.
 The method should balance usage of signal analysis and supervised machine learning. It should be implemented and tested on a testing dataset, and the results should be evaluated by a suitable metric (e.g. some sort of distance from the original score the musical ensemble used), and compared to similar tools available.
