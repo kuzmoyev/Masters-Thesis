@@ -2,3 +2,6 @@
 out
 
 Masters-Thesis.iml
+compile_and_crop.sh
+
+.DS_Store
