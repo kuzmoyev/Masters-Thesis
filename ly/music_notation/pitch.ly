@@ -11,14 +11,13 @@
     }
     {
         \time 16/4
-        \key d \major
 
         <<
         \new Voice = "one" {
             c' d' e' f' g' a' b' c'' d'' e'' f'' g'' a''
         }
 
-        \new Lyrics \lyricsto "one" \lyricmode {c-sharp d e f-sharp g a-flat b c d e f g a}
+        \new Lyrics \lyricsto "one" \lyricmode {c d e f g a b c d e f g a}
         >>
 
     }

@@ -11,15 +11,15 @@
         \hide Stem
     }
     {
-        \time 8/4
+        \time 4/4
         g'
         c'
-        f
+        a
     }
 
     \new Lyrics \lyricmode {
     ""
-    "middle C"
+    "C"
     ""
     }
 
@@ -29,7 +29,7 @@
     }
     {
         \clef bass
-        \time 8/4
+        \time 4/4
         f
         c'
         e'

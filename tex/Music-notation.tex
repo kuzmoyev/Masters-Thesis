@@ -4,10 +4,10 @@ Music notation, when properly applied, can completely describe any musical score
 to achieve this, music notation must describe all definable parameters of each sound, specifically\cite{mcgrain1990music}:
 
 \begin{itemize}
-    \item duration
-    \item pitch
-    \item dynamic
-    \item timbre
+	\item duration
+	\item pitch
+	\item dynamic
+	\item timbre
 \end{itemize}
 
 \textbf{Duration} is described by time signature ($4\atop4$, $3\atop4$, $7\atop8$, etc.), tempo (primarily, beats per
@@ -23,8 +23,8 @@ the specified clef (\inlinemusic\smalltrebleclef, \inlinemusic\smallbassclef, \i
 \figcenter\lilypondfile{ly/music_notation/pitch.ly}
 
 
-\textbf{Dynamic} of a sound describes its amplitude or loudness (!! mf, p, ff), its emotional intensity and change
-through time (crescendo, ..)
+\textbf{Dynamic} of a sound describes its amplitude or loudness (\pp, \p, \mf, \f, \ff, etc.), its emotional intensity
+and change through time.
 
 \textbf{Timbre} describes specific color of a played note/sound. Timber primarily depends on the instrument played but
 also can define other instrumental directions (i.e. \textit{on bell of cymbal}, etc.)
@@ -83,7 +83,7 @@ goes on the first leger line above the bass clef.
 \subsection{The Percussion Clef}\label{subsec:the-percussion-clef}
 
 The \textit{Percussion Clef} is commonly used for drum-set notation. Each line and space represent different part of
-the drum kit. They ar often predefined at the start of the part in so-called \textit{key} or \textit{legend}, or when
+the drum kit. They are often predefined at the start of the part in so-called \textit{key} or \textit{legend}, or when
 they first appear in the score.
 
 \figcenter\lilypondfile{ly/music_notation/percussion_clef.ly}
@@ -114,6 +114,20 @@ lines above bass clef if played by left hand and vice versa.
 \figcenter\lilypondfile{ly/music_notation/great_staff_leger_lines.ly}
 
 
+\subsection{Key signature}\label{subsec:key-signature}
+\textit{Key signature} is a series of sharp symbols or flat symbols placed on the staff, designating notes that are to
+be consistently played one semitone higher or lower than the equivalent natural notes (for example, the white notes on
+a piano keyboard) unless otherwise altered with an accidental. Key signatures are generally written immediately after
+the clef at the beginning of a line of musical notation, although they can appear in other parts of a score, notably
+after a double bar.\cite{key-signature}
+
+\figcenter\lilypondfile{ly/music_notation/key_signature.ly}
+
+Key \textit{D major} (defined in example above) consists of notes D, E, F$\sharp$, G, A, B,
+C$\sharp$. So, after the clef, notes F and C marked with a $\sharp$, so, when they occur in
+a score without any accidentals, they are played one semitone higher (C$\sharp$ instead of C, etc.)
+
+
 % Rhythmic Description
 \section{Rhythmic Description}\label{sec:rhythmic-description}
 Alongside with pitch, it is required to describe rhythm. \textit{Rhythmic description} determines exactly when note
@@ -128,14 +142,18 @@ There are two types of note heads open and closed.
 \textit{Stems} are vertical lines attached to the side of the notes-head. Together with flags, beams, and augmentation
 dots they define duration value:
 
-%\figcenter\lilypondfile{ly/music_notation/notes_duration.ly}
+\figcenter\lilypondfile{ly/music_notation/notes_duration.ly}
+
+Two half note have the same duration as one whole note, two quoter notes have the same duration as one half note and so
+on.
 
 
 \subsection{Rests}\label{subsec:rests}
 Same as for notes, we can define pauses in music - \textit{rests}:
 
-%\figcenter\lilypondfile{ly/music_notation/rests_duration.ly}
+\figcenter\lilypondfile{ly/music_notation/rests_duration.ly}
 
+Whole rest, half rest, quoter rest, and so on accordingly.
 
 \subsection{Time signatures}\label{subsec:time-signatures}
 Time signature is a sign that indicates the metre of a composition. Most time signatures consist of two vertically
@@ -145,4 +163,6 @@ respectively, half note, quarter note, eighth note, and sixteenth note). When me
 beats falling regularly into two subgroups, the division may be indicated as, for instance, ${3+4}\atop4$ instead
 of $7\atop4$\cite{time-signature}.
 
-%\figcenter\lilypondfile{ly/music_notation/time-signatures.ly}
+\figcenter\lilypondfile{ly/music_notation/time_signature.ly}
+
+$4\atop4$ is such a common time signature that sometimes it is specified with \Takt{c}{0} and $2\atop2$ as \Takt{c}{1}.
