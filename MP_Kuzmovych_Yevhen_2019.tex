@@ -6,6 +6,8 @@
 \usepackage[printonlyused]{acronym} % acronims
 \usepackage{float} % floats
 
+\usepackage{pdfpages}
+
 \usepackage{wasysym} % in-text notes
 \usepackage{harmony} % in-text notes
 \usepackage{musixtex} % in-text notes
@@ -54,7 +56,7 @@
 %    \image[1.3]{component_diagram}{pdf}{Component diagram}
 \newcommand{\image}[4][1]{
 \begin{figure}[H]
-	\smplimage[#1]{#2}{#3}
+	\textwideimg[#1]{#2}{#3}
 	\caption{#4}
 	\label{fig:#2}
 \end{figure}
@@ -108,6 +110,13 @@
 
 \chapter{Acronyms}\label{ch:acronyms}
 \begin{acronym}
+	\acro{WAVE}{Waveform Audio File Format}
+	\acro{LPCM}{Linear pulse-code modulation}
+	\acro{FFT}{Fast Fourier transform}
+	\acro{DFT}{Discrete Fourier transform}
+	\acro{IDFT}{Inverse Discrete Fourier transform}
+	\acro{CNN}{Convolutional Neural Network}
+	\acro{SiSeC}{Source Separation campaign}
 \end{acronym}
 
 

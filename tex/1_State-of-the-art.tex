@@ -1,1 +1,51 @@
 \chapter{State-of-the-art}\label{ch:state-of-the-art}
+
+This chapter discusses existing solutions for music transcription including source instruments separation, pitch
+detection, event detection, etc.
+
+\section{Source separation}\label{sec:source-separation}
+
+There were many successful attempts for music score source separation\cite{spleeter2019,singing-voice-separation,singing-voice-separation-article}.
+Performance of such projects are commonly measured according to \textit{\ac{SiSeC}}\cite{stter20182018}
+on the standard \textit{musdb18} and \textit{DSD100} datasets.
+
+Latest and most successful project in this field is \textit{Spleeter}\cite{spleeter2019}. It is a project of
+Deezer\footnote{Deezer is a French online music streaming service.}. It takes similar approaches to previous solutions
+by University of London and Spotify\cite{singing-voice-separation}. Spleeter's pre-trained models will be used in the
+module responsible for music source separation described in detail in the chapters~\ref{ch:analysis-and-design} and~\ref{ch:realisation}.
+
+Following approaches are described in~\cite{spleeter2019,singing-voice-separation,singing-voice-separation-article}.
+
+\subsection{Approach}\label{subsec:music-source-separation:approach}
+The pre-trained models are U-nets\cite{singing-voice-separation} and follows similar specifications as in
+\textit{Singing voice separation: a study on training data}\cite{singing-voice-separation-article}. The U-net is a
+encoder/decoder \ac{CNN} architecture with skip connections\cite{spleeter2019}. Architecture used in this approach
+showed a state-of-the-art results on DSD100 dataset\cite{singing-voice-separation} and in the last \ac{SiSeC}\cite{SiSEC16}.
+
+\subsection{U-net architecture}\label{subsec:music-source-separation:u-net-architecture}
+The U-Net shares the same architecture as a convolutional autoencoder with extra skip-connections that bring back
+detailed information lost during the encoding stage to the decoding stage. It has five strided\footnote{Transposed
+convolutions – also called \textit{fractionally strided convolutions} – work by swapping the forward and backward passes
+of a convolution. One way to put it is to note that the kernel defines a convolution, but whether it’s a direct
+convolution or a transposed convolution is determined by how the forward and backward passes are
+computed.\cite{dumoulin2016guide}} 2D convolution layers in the encoder and five strided 2D deconvolution layers in
+the decoder.
+
+The goal of the neural network architecture is to predict the vocal and instrumental components of its input indirectly:
+the output of the final decoder layer is a soft mask for each source that is multiplied element-wise with the mixed
+spectrogram to obtain the final estimate.
+
+\image{u-net-architecture}{png}{Network Architecture\cite{singing-voice-separation}}
+
+\subsection{Data and training}\label{subsec:music-source-separation:data-and-training}
+
+Spleeter's training dataset is an internal Deezer's dataset and is not shared (for copyright reasons).
+
+Another project with similar approach, as explained in the dedicated article\cite{singing-voice-separation-article},
+uses two datasets during training of the models: \textit{MUSDB} and \textit{Bean}.
+
+\textit{MUSDB}\cite{musdb18} is the largest and most up-to-date public dataset for source separation. It contains 150
+songs of western music genres primarily pop/rock, some hip-hop, rap and metal songs. And each song consists of four
+audio tracks: drums, bass, vocal and other. Original mix (and input of the model) is produced by summing tracks of four
+sources (expected outputs) together.
+
