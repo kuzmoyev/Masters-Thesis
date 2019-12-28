@@ -6,6 +6,12 @@
 \usepackage[printonlyused]{acronym} % acronims
 \usepackage{float} % floats
 
+\usepackage{amsmath} % for argmax, argmin
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\usepackage{amssymb}
+
+\usepackage{cleveref} % to use \cref wich includes words section or figure in reference
 \usepackage{pdfpages}
 
 \usepackage{wasysym} % in-text notes
@@ -72,18 +78,9 @@
 
 \newcommand\inlinemusic[1]{\begin{music}#1\end{music}}
 
-\newcommand{\class}[1]{\textit{\mbox#1}}
-\newcommand{\method}[1]{\textit{\mbox#1}}
-\newcommand{\field}[1]{\textit{\mbox#1}}
-\newcommand{\app}[1]{\textit{\mbox#1}}
-\newcommand{\file}[1]{\textit{\mbox#1}}
-\newcommand{\bash}[1]{\textit{\mbox#1}}
-\newcommand{\module}[1]{\textit{\mbox#1}}
-
-\newcommand{\m}[1]{\mbox{#1}}
-
-\newcommand{\definition}[1]{\textit{\textbf{\mbox{#1}}}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 
 
 \setsecnumdepth{part}
@@ -117,6 +114,20 @@
 	\acro{IDFT}{Inverse Discrete Fourier transform}
 	\acro{CNN}{Convolutional Neural Network}
 	\acro{SiSeC}{Source Separation campaign}
+	\acro{AMT}{Automatic music transcription}
+	\acro{ML}{Machine learning}
+	\acro{MIREX}{Music Information Retrieval Evaluation eXchange}
+	\acro{HPS}{Harmonic partial sequence}
+	\acro{MAP}{Maximum a posteriori}
+	\acro{EM}{Expectation-maximisation}
+	\acro{HTC}{harmonic temporal structured clustering}
+	\acro{NMF}{Non-negative matrix factorisation}
+	\acro{SAGE}{Space alternating generalised \ac{EM} algorithm}
+	\acro{HMM}{Hidden Markov model}
+	\acrodefplural{HMM}{Hidden Markov models}
+	\acro{DBN}{dynamic Bayesian network}
+	\acrodefplural{DBN}{dynamic Bayesian networks}
+
 \end{acronym}
 
 
