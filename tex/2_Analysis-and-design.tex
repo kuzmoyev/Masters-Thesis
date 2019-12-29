@@ -11,9 +11,9 @@ the solution. Arrows represent data flow. Dotted arrows represent flow that is o
 tuning, tempo, time signature and key) are specified by user, they are not being estimated. Each rectangular block
 represents logical module in implementation.
 
-Detailed description of each component is in the dedicated section following the diagram.
+Detailed description of each component is in the dedicated section following the diagram on \cref{fig:architecture}.
 
-\includepdf{architecture.pdf}
+\image[0.74]{architecture}{pdf}{Architecture of the implementation.}
 
 \section{Audio streaming}\label{sec:audio-streaming}
 
@@ -32,19 +32,20 @@ Hz).
 The most common sampling rate is 44.1 kHz, or 44100 samples per second. This is the standard for most consumer audio,
 used for formats like CDs\cite{digital-audio-basics}.
 
-The sampling rate determines the range of frequencies captured in digital audio. According to \textit{Nyquist Theorem},
-a signal which has a Fourier transform having only frequencies upto a certain maximum $f_m$, we can obtain the analog
-signal $f(t)$ from the sampled signal $f'(t)$ by passing the sampled signal $f'(t)$ through a low pass filter provided
-that the sampling frequency $f_s$ is more than twice the maximum frequency $f_m$ present in the signal i.e.\ ,
-$f_s > 2f_m$\cite{signals-and-systems}. Hence, having 44100 Hz sampling rate, we can reproduce and analise frequencies
-up to 22050 Hz. The lowest frequency a person can hear is 20 Hz. The highest frequency humans can hear are in the range
-of 20.000 Hz, but only young people can hear such high tones\cite{roots-of-modern-technology}.
+The sampling rate determines the range of frequencies captured in digital audio. The lowest frequency a person can hear
+is 20 Hz. The highest frequency humans can hear are in the range of 20.000 Hz, but only young people can hear such high
+tones\cite{roots-of-modern-technology}. According to \textit{Nyquist Theorem}, a signal which has a Fourier transform
+having only frequencies upto a certain maximum $f_m$, we can obtain the analog signal $f(t)$ from the sampled signal
+$f'(t)$ by passing the sampled signal $f'(t)$ through a low pass filter provided that the sampling frequency $f_s$ is
+more than twice the maximum frequency $f_m$ present in the signal i.e.\ , $f_s > 2f_m$\cite{signals-and-systems}. Hence,
+having 44100 Hz sampling rate, we can reproduce and analyse frequencies up to 22050 Hz (assuming an ideal low pass
+filter). Otherwise, if recorder has a sampling rate lower than $2\times$ the highest frequency (which was not cut off
+by low pass filter) it causes the effect called \textit{aliasing}, which introduces unexpected sounds in the recording
+that were not present in the original sound. If the sampling frequency is too low the frequency spectrum overlaps, and
+becomes corrupted\cite{signals-and-systems}.
 
-The implementation is able to process input sound with any sampling rate, though lower sampling rates may cause
-inaccuracies for high frequencies due to effect called \textit{aliasing}. The phenomenon of aliasing occurs if
-the sampling rate is less than the Nyquist rate ($2\times$ the highest frequency). If sampling rate is less than or greater
-than the Nyquist rate, it is called under sampling or over sampling. Aliasing phenomenon occurs only for under sampling.
-If the sampling frequency is too low the frequency spectrum overlaps, and becomes corrupted\cite{signals-and-systems}.
+The implementation is able to process input sound with any sampling rate, though lower sampling limits processed
+frequencies range to lower pitches.
 
 \pagebreak
 
@@ -53,24 +54,24 @@ If the sampling frequency is too low the frequency spectrum overlaps, and become
 First step of the sound processing is separation of the sound into source instruments (i.e.\ voice, guitar, piano,
 etc.)
 
-As was mentioned in previous chapter, for separation of source instruments, this implementation uses \textit{Spleeter}.
-\textit{Spleeter} is a fast and state-of-the art music source separation tool with pre-trained
+As was mentioned in the previous chapter, this implementation uses \textit{Spleeter} for separation of source
+instruments. \textit{Spleeter} is a fast and state-of-the art music source separation tool with pre-trained
 models\cite{spleeter2019}. Its implementation contains three pre-trained models:
 
 \begin{itemize}
-	\item vocals/accompaniment separation
-	\item 4 stems separation as in \ac{SiSeC}\cite{stter20182018} (vocals, bass, drums and other)
-	\item 5 stems separation with an extra piano stem (vocals, bass, drums, piano and other). It is, to the authors
+	\item vocals/accompaniment separation,
+	\item 4 stems separation as in \ac{SiSeC}\cite{stter20182018} (vocals, bass, drums and other),
+	\item 5 stems separation with an extra piano stem (vocals, bass, drums, piano and other). It is, to the author's
 	knowledge, the first released model to perform such a separation.
 \end{itemize}
 
 Estimations for all the models is performed in a frequency domain of the sound. Meaning that sound data from time domain
 is converted to frequency domain using \ac{FFT}, passed to the models described in section~\ref{subsec:music-source-separation:u-net-architecture}
 about U-net architecture. Output of the model is separated tracks for each instrument and voice. To get sound of each
-instrument and voice in time domain (as it would be represented in \ac{WAVE}), we'd need to pass it through \ac{IDFT}.
-Though it is unnecessary, as all the subsequent processing will be performed on the sound in frequency domain.
+instrument and voice in time domain (as it would be represented in \ac{WAVE}), we would need to pass it through
+\ac{IDFT}. But it is not necessary, as all the subsequent processing will be performed on the sound in frequency domain.
 
-More about \ac{FFT} in the following section~\ref{sec:pitch-extraction} about pitch extraction.
+More about \ac{FFT} is in the following section~\ref{sec:pitch-extraction} about pitch extraction.
 
 \section{Pitch extraction}\label{sec:pitch-extraction}
 
