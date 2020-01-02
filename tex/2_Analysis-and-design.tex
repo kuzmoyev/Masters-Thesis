@@ -74,15 +74,103 @@ instrument and voice in time domain (as it would be represented in \ac{WAVE}), w
 More about \ac{FFT} is in the following section~\ref{sec:pitch-extraction} about pitch extraction.
 
 \section{Pitch extraction}\label{sec:pitch-extraction}
+As was mentioned in \cref{sec:multi-pitch-detection} there are many approaches to pitch (and specifically
+to multi-pitch) detection. The one that is presented in this theses utilizes a combination of ideas defined in works
+of Matti P Ryynanen et al.\cite{ryynanen2005polyphonic}, Arnaud Dessein et al.\cite{dessein2010real} and Paris Smaragdis
+et al.\cite{smaragdis2003non}. Solution is joint, thus estimates played notes at a given moment all at once (opposed to
+iterative approaches). It attempts to detect frequencies similarly to matrix factorization techniques through analysis
+of sound spectrogram. But instead of matrix factorization (\ac{NMF}), this work attempts to detect notes' events,
+specifically their envelopes (more on the sound envelope in \cref{subsec:sound-envelope}), using \ac{ML} models.
+Specification of the used data and training of the models is in the \cref{subsec:data-and-model-training}.
+
+\pagebreak
+
+\subsection{Sound envelope}\label{subsec:sound-envelope}
+\textit{Sound envelope} is a variation of the sound volume in time\cite{dregvaite2015information}. Sound envelope
+consists of 4 stages: \ac{ADSR}:
+
+\image{sound-envelope}{pdf}{Sound envelope.}
+
+\cref{fig:sound-envelope} shows a theoretical simple \ac{ADSR} model of sound envelope. But different instruments
+produce different envelopes depending on a nature of sound extraction:
+
+\image{instrument-envelopes}{png}{Sound envelopes of piano and violin\cite{sound-envelope}.}
+
+As seen on the \cref{fig:instrument-envelopes}, piano and any other instrument that produces sound by hitting, tapping
+or pinching of a string (like guitar, harp, bandura, balalaika, etc.), will produce similar envelope with defined
+attack (the moment of piano key pressing; pinching or hitting a string on guitar, etc.), decay and sustain (when piano
+key remains pressed or piano sustain pedal is used, etc.) and release (when piano key and sustain pedal are released,
+guitar strings are muted, etc.).
+
 
 \subsection{Multiresolution \ac{FFT}}\label{subsec:multiresolution-fft}
 https://pdfs.semanticscholar.org/d55f/984d569786e1bbf945f7683361ffbbfff79a.pdf
 
 \section{Event detection}\label{sec:event-detection}
 
-\section{Tuning classification}\label{sec:tunning-classification}
+Note and subsequently its pitch and start are estimated by detecting its envelope. Having a sample of sound (change of
+volume of each pitch as determined from \ac{FFT}) of duration $k$ seconds specified by implementation, predictive model
+attempts to estimate whether note has been played at a given point in time by detecting its envelope that should look
+similar for each note of the given instrument. That means that there will be a model for each predefined instrument
+trained on its samples (more in \cref{subsec:data-and-model-training}).
 
-\section{Transcription}\label{sec:transcription}
+\subsection{Data and model training}\label{subsec:data-and-model-training}
+Dataset for training of the above-mentioned models was generated from the \textit{NSynth dataset}\cite{nsynth2017}.
+\textit{NSynth} is an audio dataset containing 305,979 musical notes, each with a unique pitch, timbre, and envelope.
+For 1,006 instruments from commercial sample libraries, there are generated four second, monophonic 16kHz audio
+snippets, referred to as notes, by ranging over every pitch of a standard MIDI piano (21-108) as well as five different
+velocities (25, 50, 75, 100, 127)\cite{nsynth2017}.
+
+NSynth contains samples for 11 different instruments: bass, brass, flute, guitar, keyboard, mallet, organ, reed,
+string, synth\_lead, vocal. They are all stored in \ac{WAVE} format and have needed metadata in JSON format alongside
+with them. Metadata for each sample includes instrument, note, pitch and velocity in \ac{MIDI} format (in the range
+[0, 127]), and sampling rate.
+
+Spleeter, used for source separation, is able to separate sound only into 5 source instruments. Hence only those samples
+from NSynth will be used to generate models.
+
+The way, the training dataset is generated, is completely determined by the way, the input stream is processed during
+transcription. Preprocessing of input stream and training data will be the same. The whole data flow is shown
+on \cref{fig:pitch-detection}.
+
+\image[1.15]{pitch-detection}{pdf}{Data flow for pitch detection.}
+
+As shown on \cref{fig:pitch-detection}, input stream (blue) is a stream of data read from input file or microphone (or
+any other input). It is read by chunks of size $c$ determined by implementation. Each window of $k$ chunks is passed
+through \ac{FFT} to transform data to a frequency domain. Taking several chunks of data to pass it through \ac{FFT}
+increases its accuracy, peaks of played pitches become more prominent and output becomes more robust to noise and phase
+shifts. Overlapping of $k$-sized windows allows producing more data-points per second and subsequently features for
+predictive model. Having $T$ chunks and window of size $k$, produced spectrogram is of size $F,T-k$ where $F$ is
+a number of detected frequencies.
+
+After transforming input to time-frequency spectrogram (red), frequencies are translated to musical notes (green).
+Assuming equal temperament tuning and \textit{A} with 440Hz frequency (actual tinning will be estimated later in
+the analysis), frequencies are converted to the closest note. Frequencies converted to the same note are filtered
+to leave only the highest volume value.
+
+The output of previous step is passed to the model of a given instrument by window of size $m$. So $m$ is a number of
+input features of the model. The model attempts to classify whether given window contains an envelope of a played sound
+that starts from a given point in time. So for $\forall{i} \in [0,N], j \in [0,T-k-m]$, $p_{i,j}$ (pink) shows
+prediction of the model for note $i$ at a time $j$.
+
+Training data is generated from NSynth dataset in a similar fashion. Positive labels are set for the pitch being played
+in a sample, negative for all the others. Also negative examples are generated from the same sample for played pitch but
+with a time shift, starting the example from or ending it somewhere on the middle of the actual sound envelope.
+
+\subsection{Post-processing}\label{subsec:post-processing}
+Duration of the note is determine by its start (start of the sample passed to the model) and its end (moment, when
+note's volume lowers under the predefined threshold). As was mentioned in \cref{ch:state-of-the-art}, implementation
+also utilizes several simple postprocessing ideas:
+\begin{itemize}
+	\item if the duration of the note is too short, it is omitted,
+	\item if the duration between end and next start of the same note is too short, it is combine into a single note,
+	\item if the note played at the same time with another note but with the significant difference in volume,
+	the quieter note is omitted.
+\end{itemize}
+
+All the mentioned rules are used with tuned thresholds.
+
+\section{Tuning classification}\label{sec:tunning-classification}
 
 \section{Tempo estimation}\label{sec:tempo-estimation}
 
@@ -91,6 +179,8 @@ https://pdfs.semanticscholar.org/d55f/984d569786e1bbf945f7683361ffbbfff79a.pdf
 \section{Key classification}\label{sec:key-classification}
 
 \section{Post processing}\label{sec:post-processing}
+
+\section{Transcription}\label{sec:transcription}
 
 \section{Score generation}\label{sec:score-generation}
 
