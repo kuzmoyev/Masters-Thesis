@@ -168,15 +168,131 @@ also utilizes several simple postprocessing ideas:
 	the quieter note is omitted.
 \end{itemize}
 
-All the mentioned rules are used with tuned thresholds.
 
 \section{Tuning classification}\label{sec:tunning-classification}
+Tuning of the instrument is not a part of score transcribed into sheet music and most of the Western music follows
+the same tuning system. Specifically, equal temperament system with \textit{A} tuned to 440Hz. But tuning estimation is
+an essential part for correct reproduction of the sound.
+
+There are two primary parts to tuning estimation: detection of frequency of base note, commonly \textit{A}:
+\figcenter{
+\lilypondfile{ly/analysis_and_design/base_a.ly}
+\caption{Base \textit{A} commonly tuned to 440Hz.}
+}
+and tuning system, like equal temperament, pythagorean, meantone, etc. While tuning system in the Western music very
+rarely diverges from equal temperament, frequency of a base note can often be chosen to be different from 440Hz. That
+also often might happen for instruments that are often being retuned like guitars as tuning ``by ear'' by person that
+does not have a perfect pitch\footnote{\textit{Perfect pitch} or \textit{absolute pitch} is the ability to identify
+a note by hearing it. The ability is considered remarkably rare, estimated to be less than one in 10,000
+individuals\cite{perfect-pitch}.} is defined by tuning of the string relative to which all other strings are tuned.
+
+Having found one played frequency $F$ in sound (or several frequencies for better precision), it is matched to
+the closest note $N$ in 440Hz-A-tuning, then real frequency of \textit{A} note $f(A)$ is calculated as:
+
+\[ f(A) = F * 2^\frac{t(N)-t(A)}{12} \]
+
+where $t(N)$ is an index number of the note(semitone) $N$ (for example in \ac{MIDI} representation). Now, all the other
+notes can be calculated in the same way.
 
 \section{Tempo estimation}\label{sec:tempo-estimation}
+As was mentioned in \cref{subsec:tempo-and-time-signature-estimation}, \textit{Madmom} library will be used for
+the task of tempo estimation. Authors use a recurrent neural network to learn an intermediate beat-level representation
+of the audio signal. The output of the neural network is a beat activation function, which represents the probability of
+a frame being a beat position. And instead of processing the beat activation function to extract the positions of
+the beats, authors use it directly as a one-dimensional input to the bank of resonating comb filters. \text{Comb
+filtering} can be defined as ``the frequency response caused by combining a sound with its delayed duplicate.
+The frequency response displays a series of peaks and dips caused by phase interference. The peaks and dips look like
+the teeth in a comb, with very narrow, deep notches where signals are attenuated.''\cite{comb-filter}. Using comb
+filters with different lags (delays) implementation of madmom detects at which lag the beat of the sound resonates
+the most. Given lag would then define a tempo.
+
+The range of possible tempo values (\ac{BPM}) $t$ is limited to $1 \le t \le 128$ and to only whole numbers. This is
+decided so that the range can include loops that last from only 1 beat to 128 beats, which would correspond to a maximum
+of 32 bars in $4\atop4$ meter.
 
 \section{Time signature estimation}\label{sec:time-signature-estimation}
+Problem of time signature or \textit{meter} estimation is similar to tempo detection in a sense that the basic idea of
+it is finding its repetitiveness, recurrence - beat for tempo and content of a sheet music bar for time signature. That
+is why solutions for these problems often overlap.
+
+Another approach for tempo as well as for time signature estimation is autocorrelation modeling. Autocorrelation
+modeling is used to determine the length of the bar - number of beats per each meter. Technically, time signature
+definition can contain any numbers for number of beats per measure (top number) and the note value that receives one
+beat (bottom number). But most of music peaces of western music use powers of 2 as a note value (otherwise it is called
+irrational measure) and rarely higher than 8 (\AAcht). As for number of beats per bar, a 1 or values higher than 12 are
+considered to be the unusual time signatures. So the implementation limits estimation to these ranges.
+
+Knowing the tempo - a number of fourth notes (\Vier) per minute, taking an average volume of the notes (0 if no notes
+are there) in all position in time of sixteenth notes(\Sech) produces the time series on which implementation models
+autocorrelation. Assuming that rhythmical structure of the bar and position of strong and weak\footnote{Commonly, some
+notes per bar are \textit{strong}(louder) and some are \textit{weak}(quieter). This determines accents in measure. For
+example in $4\atop4$ time, first beat is often the loudest(strong), third is also strong, but not as strong as
+the first, and second and fourth are weak.} beats is continues through the whole peace or its significant part, the lag
+of modeled autocorrelation will determine the number of sixteenth notes per bar.
+
+\ac{ARIMA} model is used to determine the lag. \ac{ARIMA} is a class of models that ``explains'' a given time series
+based on its own past values, that is, its own lags (AR part) and the lagged forecast errors (MA part), so that equation
+can be used to forecast future values. Specifically its simpler version AR will be used. AR is defined as follows:
+\[ Y_t = \alpha + \beta_1*Y_{t-1} + \beta_2*Y_{t-2} + \dots + \beta_n*Y_{t-n} + \epsilon_1 \]
+where $Y_t$ is value measured in time $t$, $\alpha$ is the intercept term, $\beta_k$ is coefficient of the first lag,
+and $\epsilon$ is a noise. All of $\beta$s and $\alpha$ are estimated by the model. The higher the absolute value
+$\beta_k$ - the higher the correlation between the signal and its copy delayed on lag $k$. Obviously the highest
+correlation of a signal is with its 0 lag. But as was mentioned above, the choice is limited to range $2 \le k \le 12$
+with 8 as a shortest note value. So the coefficient $\beta$ are estimated from 8th up to 32nd lag to determine time
+signatures from $2\atop4$ (which in time is equivalent to $8\atop16$) up to $12\atop8$ (which in time is equivalent to
+$24\atop16$) and up to $8\atop4$ or $4\atop2$ (which in time are equivalent to $32\atop16$).
+
+Technically any score for which appropriate $k$ was found, can be written within $k\atop16$ measure. But it is better to
+identify the best logical value for the number of beats per measure for simplification of reading of the score and
+convert the time signature to either $k/2\atop8$, $k/4\atop4$, or $k/8\atop2$.
+
+Having found a value of $k$, converting is performed according to a \cref{fig:time-signatures-table} as indicated by
+green cells for even values of $k$. Odd values of $k$ are not expected as they are very unusual in measures of
+$k\atop16$. If they are odd time signature is left as is. Important to note that measures indicated by green cell are
+more common than their counterparts within a row but time signatures like $6\atop8$ and $2\atop2$ are also widely used
+in music. But it is hard to objectively identify which of the measures $6\atop8$ or $3\atop4$, $2\atop2$ or $4\atop4$
+should be used.
+
+\begin{table}[]
+	\begin{center}
+		\def\arraystretch{1.3}
+		\begin{tabular}{|c||c|c|c|c|}
+			\hline
+			 k  & 16 (\Sech)   & 8 (\AAcht)   & 4 (\Vier)   & 2 (\Halb)  \\ \hline
+			 8  & $8\atop16$   & $4\atop8$    & \cellcolor[HTML]{9AFF99}$2\atop4$   & $1\atop2$  \\ \hline
+			 10 & $10\atop16$  & \cellcolor[HTML]{9AFF99}$5\atop8$    &             &            \\ \hline
+			 12 & $12\atop16$  & $6\atop8$    & \cellcolor[HTML]{9AFF99}$3\atop4$   &            \\ \hline
+			 14 & $14\atop16$  & \cellcolor[HTML]{9AFF99}$7\atop8$    &             &            \\ \hline
+			 16 & $16\atop16$  & $8\atop8$    & \cellcolor[HTML]{9AFF99}$4\atop4$   & $2\atop2$  \\ \hline
+			 18 & $18\atop16$  & \cellcolor[HTML]{9AFF99}$9\atop8$    &             &            \\ \hline
+			 20 & $20\atop16$  & $10\atop8$   & \cellcolor[HTML]{9AFF99}$5\atop4$   &            \\ \hline
+			 22 & $22\atop16$  & \cellcolor[HTML]{9AFF99}$11\atop8$   &             &            \\ \hline
+			 24 & $24\atop16$  & $12\atop8$   & \cellcolor[HTML]{9AFF99}$6\atop4$   & $3\atop2$  \\ \hline
+			 26 & $26\atop16$  & \cellcolor[HTML]{9AFF99}$13\atop8$   &             &            \\ \hline
+			 28 & $28\atop16$  & $14\atop8$   & \cellcolor[HTML]{9AFF99}$7\atop4$   &            \\ \hline
+			 30 & $30\atop16$  & \cellcolor[HTML]{9AFF99}$15\atop8$   &             &            \\ \hline
+			 32 & $32\atop16$  & $16\atop8$   & $8\atop4$   & \cellcolor[HTML]{9AFF99}$4\atop2$  \\ \hline
+		\end{tabular}
+		\caption{Time signature selection table.}
+		\label{fig:time-signatures-table}
+	\end{center}
+\end{table}
+
 
 \section{Key classification}\label{sec:key-classification}
+Key signature is a part of sheet music notation that simplifies it by avoiding redundant repetitive accidentals (sharps
+and flats) and by defining the set of used notes which in its turn defines the set of used chords, their progressions
+and harmonic functions in a piece of music. Detailed description of key signature is in a \cref{subsec:key-signature}.
+
+As was mentioned in \cref{subsec:key-and-chord-detection}, there are several approaches to key classification including
+template matching or \acp{HMM}. The best paid solution for key detection is \textit{Mixed In Key}\cite{mixed-in-keys}
+having 95\% accuracy on their test dataset. The best free solution is \textit{KeyFinder}\cite{key-finder} with accuracy
+of 77\%. But it is implemented in C++ so is hard to incorporated into Python implementation used in this work.
+
+A simple heuristical solution was used in the framework of this thesis. For each note that has a sharp counterpart
+(\textit{C}, \textit{D}, \textit{F}, \textit{G}, and \textit{A}), if its semitone-higher (sharper) note appears more
+often than its natural note, its sharp symbol is included into a key signature.
+
 
 \section{Post processing}\label{sec:post-processing}
 
