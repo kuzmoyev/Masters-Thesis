@@ -30,19 +30,19 @@ allows to perform \ac{DFT} used in pitch extraction.
 Hz).
 
 The most common sampling rate is 44.1 kHz, or 44100 samples per second. This is the standard for most consumer audio,
-used for formats like CDs\cite{digital-audio-basics}.
+used for formats like CDs~\cite{digital-audio-basics}.
 
 The sampling rate determines the range of frequencies captured in digital audio. The lowest frequency a person can hear
 is 20 Hz. The highest frequency humans can hear are in the range of 20.000 Hz, but only young people can hear such high
-tones\cite{roots-of-modern-technology}. According to \textit{Nyquist Theorem}, a signal which has a Fourier transform
+tones~\cite{roots-of-modern-technology}. According to \textit{Nyquist Theorem}, a signal which has a Fourier transform
 having only frequencies upto a certain maximum $f_m$, we can obtain the analog signal $f(t)$ from the sampled signal
 $f'(t)$ by passing the sampled signal $f'(t)$ through a low pass filter provided that the sampling frequency $f_s$ is
-more than twice the maximum frequency $f_m$ present in the signal i.e.\ , $f_s > 2f_m$\cite{signals-and-systems}. Hence,
+more than twice the maximum frequency $f_m$ present in the signal i.e.\ , $f_s > 2f_m$~\cite{signals-and-systems}. Hence,
 having 44100 Hz sampling rate, we can reproduce and analyse frequencies up to 22050 Hz (assuming an ideal low pass
 filter). Otherwise, if recorder has a sampling rate lower than $2\times$ the highest frequency (which was not cut off
 by low pass filter) it causes the effect called \textit{aliasing}, which introduces unexpected sounds in the recording
 that were not present in the original sound. If the sampling frequency is too low the frequency spectrum overlaps, and
-becomes corrupted\cite{signals-and-systems}.
+becomes corrupted~\cite{signals-and-systems}.
 
 The implementation is able to process input sound with any sampling rate, though lower sampling limits processed
 frequencies range to lower pitches.
@@ -56,11 +56,11 @@ etc.)
 
 As was mentioned in the previous chapter, this implementation uses \textit{Spleeter} for separation of source
 instruments. \textit{Spleeter} is a fast and state-of-the art music source separation tool with pre-trained
-models\cite{spleeter2019}. Its implementation contains three pre-trained models:
+models~\cite{spleeter2019}. Its implementation contains three pre-trained models:
 
 \begin{itemize}
 	\item vocals/accompaniment separation,
-	\item 4 stems separation as in \ac{SiSeC}\cite{stter20182018} (vocals, bass, drums and other),
+	\item 4 stems separation as in \ac{SiSeC}~\cite{stter20182018} (vocals, bass, drums and other),
 	\item 5 stems separation with an extra piano stem (vocals, bass, drums, piano and other). It is, to the author's
 	knowledge, the first released model to perform such a separation.
 \end{itemize}
@@ -76,8 +76,8 @@ More about \ac{FFT} is in the following section~\ref{sec:pitch-extraction} about
 \section{Pitch extraction}\label{sec:pitch-extraction}
 As was mentioned in \cref{sec:multi-pitch-detection} there are many approaches to pitch (and specifically
 to multi-pitch) detection. The one that is presented in this theses utilizes a combination of ideas defined in works
-of Matti P Ryynanen et al.\cite{ryynanen2005polyphonic}, Arnaud Dessein et al.\cite{dessein2010real} and Paris Smaragdis
-et al.\cite{smaragdis2003non}. Solution is joint, thus estimates played notes at a given moment all at once (opposed to
+of Matti P Ryynanen et al.~\cite{ryynanen2005polyphonic}, Arnaud Dessein et al.~\cite{dessein2010real} and Paris Smaragdis
+et al.~\cite{smaragdis2003non}. Solution is joint, thus estimates played notes at a given moment all at once (opposed to
 iterative approaches). It attempts to detect frequencies similarly to matrix factorization techniques through analysis
 of sound spectrogram. But instead of matrix factorization (\ac{NMF}), this work attempts to detect notes' events,
 specifically their envelopes (more on the sound envelope in \cref{subsec:sound-envelope}), using \ac{ML} models.
@@ -86,7 +86,7 @@ Specification of the used data and training of the models is in the \cref{subsec
 \pagebreak
 
 \subsection{Sound envelope}\label{subsec:sound-envelope}
-\textit{Sound envelope} is a variation of the sound volume in time\cite{dregvaite2015information}. Sound envelope
+\textit{Sound envelope} is a variation of the sound volume in time~\cite{dregvaite2015information}. Sound envelope
 consists of 4 stages: \ac{ADSR}:
 
 \image{sound-envelope}{pdf}{Sound envelope.}
@@ -94,7 +94,7 @@ consists of 4 stages: \ac{ADSR}:
 \cref{fig:sound-envelope} shows a theoretical simple \ac{ADSR} model of sound envelope. But different instruments
 produce different envelopes depending on a nature of sound extraction:
 
-\image{instrument-envelopes}{png}{Sound envelopes of piano and violin\cite{sound-envelope}.}
+\image{instrument-envelopes}{png}{Sound envelopes of piano and violin~\cite{sound-envelope}.}
 
 As seen on the \cref{fig:instrument-envelopes}, piano and any other instrument that produces sound by hitting, tapping
 or pinching of a string (like guitar, harp, bandura, balalaika, etc.), will produce similar envelope with defined
@@ -102,9 +102,6 @@ attack (the moment of piano key pressing; pinching or hitting a string on guitar
 key remains pressed or piano sustain pedal is used, etc.) and release (when piano key and sustain pedal are released,
 guitar strings are muted, etc.).
 
-
-\subsection{Multiresolution \ac{FFT}}\label{subsec:multiresolution-fft}
-https://pdfs.semanticscholar.org/d55f/984d569786e1bbf945f7683361ffbbfff79a.pdf
 
 \section{Event detection}\label{sec:event-detection}
 
@@ -115,11 +112,11 @@ similar for each note of the given instrument. That means that there will be a m
 trained on its samples (more in \cref{subsec:data-and-model-training}).
 
 \subsection{Data and model training}\label{subsec:data-and-model-training}
-Dataset for training of the above-mentioned models was generated from the \textit{NSynth dataset}\cite{nsynth2017}.
+Dataset for training of the above-mentioned models was generated from the \textit{NSynth dataset}~\cite{nsynth2017}.
 \textit{NSynth} is an audio dataset containing 305,979 musical notes, each with a unique pitch, timbre, and envelope.
 For 1,006 instruments from commercial sample libraries, there are generated four second, monophonic 16kHz audio
 snippets, referred to as notes, by ranging over every pitch of a standard MIDI piano (21-108) as well as five different
-velocities (25, 50, 75, 100, 127)\cite{nsynth2017}.
+velocities (25, 50, 75, 100, 127)~\cite{nsynth2017}.
 
 NSynth contains samples for 11 different instruments: bass, brass, flute, guitar, keyboard, mallet, organ, reed,
 string, synth\_lead, vocal. They are all stored in \ac{WAVE} format and have needed metadata in JSON format alongside
@@ -129,9 +126,8 @@ with them. Metadata for each sample includes instrument, note, pitch and velocit
 Spleeter, used for source separation, is able to separate sound only into 5 source instruments. Hence only those samples
 from NSynth will be used to generate models.
 
-The way, the training dataset is generated, is completely determined by the way, the input stream is processed during
-transcription. Preprocessing of input stream and training data will be the same. The whole data flow is shown
-on \cref{fig:pitch-detection}.
+The preprocessing of the training dataset is completely the same as preprocessing of the sound samples during
+transcription. The whole data flow is shown on \cref{fig:pitch-detection}.
 
 \image[1.15]{pitch-detection}{pdf}{Data flow for pitch detection.}
 
@@ -144,7 +140,7 @@ predictive model. Having $T$ chunks and window of size $k$, produced spectrogram
 a number of detected frequencies.
 
 After transforming input to time-frequency spectrogram (red), frequencies are translated to musical notes (green).
-Assuming equal temperament tuning and \textit{A} with 440Hz frequency (actual tinning will be estimated later in
+Assuming equal temperament tuning and \textit{A} with 440Hz frequency (actual tuning will be estimated later in
 the analysis), frequencies are converted to the closest note. Frequencies converted to the same note are filtered
 to leave only the highest volume value.
 
@@ -155,18 +151,7 @@ prediction of the model for note $i$ at a time $j$.
 
 Training data is generated from NSynth dataset in a similar fashion. Positive labels are set for the pitch being played
 in a sample, negative for all the others. Also negative examples are generated from the same sample for played pitch but
-with a time shift, starting the example from or ending it somewhere on the middle of the actual sound envelope.
-
-\subsection{Post-processing}\label{subsec:post-processing}
-Duration of the note is determine by its start (start of the sample passed to the model) and its end (moment, when
-note's volume lowers under the predefined threshold). As was mentioned in \cref{ch:state-of-the-art}, implementation
-also utilizes several simple postprocessing ideas:
-\begin{itemize}
-	\item if the duration of the note is too short, it is omitted,
-	\item if the duration between end and next start of the same note is too short, it is combine into a single note,
-	\item if the note played at the same time with another note but with the significant difference in volume,
-	the quieter note is omitted.
-\end{itemize}
+with a time shift, starting the example from or ending it somewhere in the middle of the actual sound envelope.
 
 
 \section{Tuning classification}\label{sec:tunning-classification}
@@ -184,7 +169,7 @@ rarely diverges from equal temperament, frequency of a base note can often be ch
 also often might happen for instruments that are often being retuned like guitars as tuning ``by ear'' by person that
 does not have a perfect pitch\footnote{\textit{Perfect pitch} or \textit{absolute pitch} is the ability to identify
 a note by hearing it. The ability is considered remarkably rare, estimated to be less than one in 10,000
-individuals\cite{perfect-pitch}.} is defined by tuning of the string relative to which all other strings are tuned.
+individuals~\cite{perfect-pitch}.} is defined by tuning of the string relative to which all other strings are tuned.
 
 Having found one played frequency $F$ in sound (or several frequencies for better precision), it is matched to
 the closest note $N$ in 440Hz-A-tuning, then real frequency of \textit{A} note $f(A)$ is calculated as:
@@ -202,7 +187,7 @@ a frame being a beat position. And instead of processing the beat activation fun
 the beats, authors use it directly as a one-dimensional input to the bank of resonating comb filters. \text{Comb
 filtering} can be defined as ``the frequency response caused by combining a sound with its delayed duplicate.
 The frequency response displays a series of peaks and dips caused by phase interference. The peaks and dips look like
-the teeth in a comb, with very narrow, deep notches where signals are attenuated.''\cite{comb-filter}. Using comb
+the teeth in a comb, with very narrow, deep notches where signals are attenuated.''~\cite{comb-filter}. Using comb
 filters with different lags (delays) implementation of madmom detects at which lag the beat of the sound resonates
 the most. Given lag would then define a tempo.
 
@@ -219,7 +204,7 @@ Another approach for tempo as well as for time signature estimation is autocorre
 modeling is used to determine the length of the bar - number of beats per each meter. Technically, time signature
 definition can contain any numbers for number of beats per measure (top number) and the note value that receives one
 beat (bottom number). But most of music peaces of western music use powers of 2 as a note value (otherwise it is called
-irrational measure) and rarely higher than 8 (\AAcht). As for number of beats per bar, a 1 or values higher than 12 are
+irrational measure) and rarely higher than 8 (\Acht). As for number of beats per bar, a 1 or values higher than 12 are
 considered to be the unusual time signatures. So the implementation limits estimation to these ranges.
 
 Knowing the tempo - a number of fourth notes (\Vier) per minute, taking an average volume of the notes (0 if no notes
@@ -258,20 +243,20 @@ should be used.
 		\def\arraystretch{1.3}
 		\begin{tabular}{|c||c|c|c|c|}
 			\hline
-			 k  & 16 (\Sech)   & 8 (\AAcht)   & 4 (\Vier)   & 2 (\Halb)  \\ \hline
-			 8  & $8\atop16$   & $4\atop8$    & \cellcolor[HTML]{9AFF99}$2\atop4$   & $1\atop2$  \\ \hline
-			 10 & $10\atop16$  & \cellcolor[HTML]{9AFF99}$5\atop8$    &             &            \\ \hline
-			 12 & $12\atop16$  & $6\atop8$    & \cellcolor[HTML]{9AFF99}$3\atop4$   &            \\ \hline
-			 14 & $14\atop16$  & \cellcolor[HTML]{9AFF99}$7\atop8$    &             &            \\ \hline
-			 16 & $16\atop16$  & $8\atop8$    & \cellcolor[HTML]{9AFF99}$4\atop4$   & $2\atop2$  \\ \hline
-			 18 & $18\atop16$  & \cellcolor[HTML]{9AFF99}$9\atop8$    &             &            \\ \hline
-			 20 & $20\atop16$  & $10\atop8$   & \cellcolor[HTML]{9AFF99}$5\atop4$   &            \\ \hline
-			 22 & $22\atop16$  & \cellcolor[HTML]{9AFF99}$11\atop8$   &             &            \\ \hline
-			 24 & $24\atop16$  & $12\atop8$   & \cellcolor[HTML]{9AFF99}$6\atop4$   & $3\atop2$  \\ \hline
-			 26 & $26\atop16$  & \cellcolor[HTML]{9AFF99}$13\atop8$   &             &            \\ \hline
-			 28 & $28\atop16$  & $14\atop8$   & \cellcolor[HTML]{9AFF99}$7\atop4$   &            \\ \hline
-			 30 & $30\atop16$  & \cellcolor[HTML]{9AFF99}$15\atop8$   &             &            \\ \hline
-			 32 & $32\atop16$  & $16\atop8$   & $8\atop4$   & \cellcolor[HTML]{9AFF99}$4\atop2$  \\ \hline
+			k & 16 (\Sech)   & 8 (\Acht)   & 4 (\Vier)   & 2 (\Halb)  \\ \hline
+			8 & $8\atop16$   & $4\atop8$    & \cellcolor[HTML]{9AFF99}$2\atop4$   & $1\atop2$  \\ \hline
+			10 & $10\atop16$  & \cellcolor[HTML]{9AFF99}$5\atop8$    & &            \\ \hline
+			12 & $12\atop16$  & $6\atop8$    & \cellcolor[HTML]{9AFF99}$3\atop4$   &            \\ \hline
+			14 & $14\atop16$  & \cellcolor[HTML]{9AFF99}$7\atop8$    & &            \\ \hline
+			16 & $16\atop16$  & $8\atop8$    & \cellcolor[HTML]{9AFF99}$4\atop4$   & $2\atop2$  \\ \hline
+			18 & $18\atop16$  & \cellcolor[HTML]{9AFF99}$9\atop8$    & &            \\ \hline
+			20 & $20\atop16$  & $10\atop8$   & \cellcolor[HTML]{9AFF99}$5\atop4$   &            \\ \hline
+			22 & $22\atop16$  & \cellcolor[HTML]{9AFF99}$11\atop8$   & &            \\ \hline
+			24 & $24\atop16$  & $12\atop8$   & \cellcolor[HTML]{9AFF99}$6\atop4$   & $3\atop2$  \\ \hline
+			26 & $26\atop16$  & \cellcolor[HTML]{9AFF99}$13\atop8$   & &            \\ \hline
+			28 & $28\atop16$  & $14\atop8$   & \cellcolor[HTML]{9AFF99}$7\atop4$   &            \\ \hline
+			30 & $30\atop16$  & \cellcolor[HTML]{9AFF99}$15\atop8$   & &            \\ \hline
+			32 & $32\atop16$  & $16\atop8$   & $8\atop4$   & \cellcolor[HTML]{9AFF99}$4\atop2$  \\ \hline
 		\end{tabular}
 		\caption{Time signature selection table.}
 		\label{fig:time-signatures-table}
@@ -282,23 +267,81 @@ should be used.
 \section{Key classification}\label{sec:key-classification}
 Key signature is a part of sheet music notation that simplifies it by avoiding redundant repetitive accidentals (sharps
 and flats) and by defining the set of used notes which in its turn defines the set of used chords, their progressions
-and harmonic functions in a piece of music. Detailed description of key signature is in a \cref{subsec:key-signature}.
+and harmonic functions in a piece of music. Detailed description of key signature is in the \cref{subsec:key-signature}.
 
 As was mentioned in \cref{subsec:key-and-chord-detection}, there are several approaches to key classification including
-template matching or \acp{HMM}. The best paid solution for key detection is \textit{Mixed In Key}\cite{mixed-in-keys}
-having 95\% accuracy on their test dataset. The best free solution is \textit{KeyFinder}\cite{key-finder} with accuracy
-of 77\%. But it is implemented in C++ so is hard to incorporated into Python implementation used in this work.
+template matching or \acp{HMM}. The best paid solution for key detection is \textit{Mixed In Key}~\cite{mixed-in-keys}
+having 95\% accuracy on their test dataset. The best free solution is \textit{KeyFinder}~\cite{key-finder} with accuracy
+of 77\%. But it is implemented in C++ so is hard to incorporate into Python implementation used in this work.
 
 A simple heuristical solution was used in the framework of this thesis. For each note that has a sharp counterpart
 (\textit{C}, \textit{D}, \textit{F}, \textit{G}, and \textit{A}), if its semitone-higher (sharper) note appears more
-often than its natural note, its sharp symbol is included into a key signature.
+often than its natural note in any octave, its sharp symbol is included into a key signature. For example:
+\figcenter{
+\lilypondfile{ly/analysis_and_design/key_signature_c.ly}
+\caption{Notes in a key of \textit{C major}.}
+}
+will be translated into
+\figcenter{
+\lilypondfile{ly/analysis_and_design/key_signature_g.ly}
+\caption{Notes in a key of \textit{G major} (note a $\sharp$ on the \textit{F} line).}
+}
 
+Notes above are one \textit{F} (natural) and two of \textit{F}$\sharp$ from three different octaves. As there are more
+\textit{F}$\sharp$ notes, output transcription will be in a key of \textit{G major}, that consists of notes \textit{G},
+\textit{A}, \textit{B}, \textit{C}, \textit{D}, \textit{E}, and \textit{F}$\sharp$.
+
+It is important to note that \textit{E minor} key has the same set of notes, but to determine whether key is
+\textit{G major} or \textit{E minor} is a much more complex task and requires an analysis of chord progressions and
+their harmonic functions within the context of a given score.
 
 \section{Post processing}\label{sec:post-processing}
 
-\section{Transcription}\label{sec:transcription}
+Duration of the note is determine by its start (start of the sample passed to the model) and its end (moment, when
+note's volume lowers under the predefined threshold). As was mentioned in \cref{ch:state-of-the-art}, implementation
+also utilizes several simple postprocessing ideas:
+\begin{itemize}
+	\item if the duration of the note is too short, it is omitted,
+	\item if the duration between end and next start of the same note is too short, it is combined into a single note,
+	\item if the note played at the same time with another note but with the significant difference in volume,
+	the quieter note is omitted.
+\end{itemize}
+
+Another goal of post processing module is the determination of the rests positions and their lengths. Rests fill in
+the gaps in a bar where no note is played. They are required to position notes correctly on the staff and subsequently
+in time for the musician.
+As for notes, it is needed to determine time of the rests' start and their length (whole rest, half rest, quoter rest,
+etc.). The process is fairly straightforward having the notes and their positions detected:
+
+\figcenter{
+\begin{algorithm}[H]
+	\For{each bar}{
+		\While{not the end of the bar}{
+			\eIf{any note starts at a current position}{
+				go to the end of the note\;
+			}{
+				mark start of the rest\;
+				go to the next note or an end of the bar whatever comes first and mark it as an end of a rest\;
+				determine the length of the rest from its start and end\;
+			}
+		}
+	}
+\end{algorithm}
+\caption{Rests detection algorithm.}
+}
 
 \section{Score generation}\label{sec:score-generation}
 
+Finally, having estimated time signature, key, positions and pitches of notes, rests, the output transcription is
+generated.
 
+\textit{LilyPond}~\cite{lilypond} is used for score generation. Lilypond is a computer program and file format for music
+engraving. Notes in Lilypond are represented in pitch-duration format: pitch is specified with \textit{Helmholtz pitch
+notation}\footnote{\textit{Helmholtz pitch notation} is a system for naming musical notes. For example, the note C is
+shown in different octaves by using upper-case letters for low notes, and lower-case letters for high notes, and adding
+sub-primes and primes in the following sequence: $C_{\prime\prime}$ $C_\prime$ $C$ $c$ $c'$ $c''$ $c'''$, where $c'$ is
+the \textit{middle C}.}, and duration is specified with a \textit{numeral based system}\footnote{Duration of a note is
+specified with numbers 1 (\Ganz), 2 (\Halb), 4 (\Vier), 8 (\Acht), etc. For a quarter note (\Vier) number can be
+omitted.}.
 
+The output of this module is a Lilypond file (in .ly format) and subsequently score in \ac{PDF}.

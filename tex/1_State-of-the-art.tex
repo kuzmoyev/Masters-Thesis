@@ -2,7 +2,7 @@
 
 This chapter discusses existing state-of-the-art solutions for music transcription.
 
-Sound transcription into sheet music is a combination of several techniques that include but not limited to source
+Sound transcription into sheet music is a combination of several techniques that include but are not limited to source
 instruments separation, pitch/note detection, event detection, etc.
 
 Source separation and sound transcription to sheet music are fairly independent processes so their description and
@@ -10,37 +10,37 @@ approaches may come from different sources and different projects. Therefore, im
 
 \section{Source separation}\label{sec:source-separation}
 
-There were many successful attempts for music score source separation\cite{spleeter2019,singing-voice-separation,singing-voice-separation-article}.
-Performance of such projects are commonly measured according to \textit{\ac{SiSeC}}\cite{stter20182018}
-on the standard \textit{musdb18}\cite{musdb18} and \textit{DSD100}\cite{SiSEC16} datasets.
+There were many successful attempts for music score source separation~\cite{spleeter2019,singing-voice-separation,singing-voice-separation-article}.
+Performance of such projects are commonly measured according to \textit{\ac{SiSeC}}~\cite{stter20182018}
+on the standard \textit{musdb18}~\cite{musdb18} and \textit{DSD100}~\cite{SiSEC16} datasets.
 
-Latest and most successful project in this field is \textit{Spleeter}\cite{spleeter2019}. It is a project of
+Latest and most successful project in this field is \textit{Spleeter}~\cite{spleeter2019}. It is a project of
 Deezer\footnote{Deezer is a French online music streaming service (deezer.com).}. It takes similar approaches to previous solutions
-by University of London and Spotify\cite{singing-voice-separation}. Spleeter's pre-trained models will be used in the
+by University of London and Spotify~\cite{singing-voice-separation}. Spleeter's pre-trained models will be used in the
 module responsible for music source separation described in detail in the chapters~\ref{ch:analysis-and-design} and~\ref{ch:implementation}.
 
 Following approaches are described in~\cite{spleeter2019,singing-voice-separation,singing-voice-separation-article}.
 
-\subsection{Spleeters approach}\label{subsec:music-source-separation:approach}
-The pre-trained models are U-nets\cite{singing-voice-separation} and follow similar specifications as in
-\textit{Singing voice separation: a study on training data}\cite{singing-voice-separation-article}. The U-net is a
-encoder/decoder \ac{CNN} architecture with skip connections\cite{spleeter2019}. Architecture used in this approach
-showed a state-of-the-art results on DSD100 dataset\cite{singing-voice-separation} and in the last \ac{SiSeC}\cite{SiSEC16}.
+\subsection{Spleeter's approach}\label{subsec:music-source-separation:approach}
+The pre-trained models are U-nets~\cite{singing-voice-separation} and follow similar specifications as in
+\textit{Singing voice separation: a study on training data}~\cite{singing-voice-separation-article}. The U-net is an
+encoder/decoder \ac{CNN} architecture with skip connections~\cite{spleeter2019}. Architecture used in this approach
+showed a state-of-the-art results on DSD100 dataset~\cite{singing-voice-separation} and in the last \ac{SiSeC}~\cite{SiSEC16}.
 
 \subsection{U-net architecture}\label{subsec:music-source-separation:u-net-architecture}
-The U-Net shares the same architecture (shown on \cref{fig:u-net-architecture}) as a convolutional autoencoder with
+The U-Net shares the same architecture (shown in \cref{fig:u-net-architecture}) as a convolutional autoencoder with
 extra skip-connections that bring back detailed information lost during the encoding stage to the decoding stage. It has
 five strided\footnote{Transposed convolutions – also called \textit{fractionally strided convolutions} – work by
 swapping the forward and backward passes of a convolution. One way to put it is to note that the kernel defines
 a convolution, but whether it’s a direct convolution or a transposed convolution is determined by how the forward and
-backward passes are computed.\cite{dumoulin2016guide}} 2D convolution layers in the encoder and five strided 2D
+backward passes are computed~\cite{dumoulin2016guide}.} 2D convolution layers in the encoder and five strided 2D
 deconvolution layers in the decoder.
 
 The goal of the neural network architecture is to predict the vocal and instrumental components of its input indirectly:
 the output of the final decoder layer is a soft mask for each source that is multiplied element-wise with the mixed
 spectrogram to obtain the final estimate.
 
-\image{u-net-architecture}{pdf}{Network Architecture\cite{singing-voice-separation}}
+\image{u-net-architecture}{pdf}{Network Architecture~\cite{singing-voice-separation}}
 
 \pagebreak
 
@@ -48,10 +48,10 @@ spectrogram to obtain the final estimate.
 
 Spleeter's training dataset is an internal Deezer's dataset and is not shared (for copyright reasons).
 
-Another project with similar approach, as explained in the dedicated article\cite{singing-voice-separation-article},
-uses two datasets during training of the models: \textit{MUSDB}\cite{musdb18} and \textit{Bean}(private dataset).
+Another project with similar approach, as explained in the dedicated article~\cite{singing-voice-separation-article},
+uses two datasets during training of the models: \textit{MUSDB}~\cite{musdb18} and \textit{Bean}(private dataset).
 
-\textit{MUSDB} is the largest and most up-to-date public dataset for source separation\cite{musdb18}. It contains 150
+\textit{MUSDB} is the largest and most up-to-date public dataset for source separation~\cite{musdb18}. It contains 150
 songs of western music genres primarily pop/rock, some hip-hop, rap and metal songs. And each song consists of four
 audio tracks: drums, bass, vocal and other. Original mix (and input of the model) is produced by summing tracks of four
 sources (expected outputs) together.
@@ -64,7 +64,7 @@ approaches and projects that used them.
 The most important part of transcription of sound into sheet music is pitch (and subsequently note) detection. The core
 problem of polyphonic music transcription is multi-pitch detection.
 
-In his Ph.D.\ research \textit{Multiple fundamental frequency estimation of polyphonic recordings}\cite{fundamental-frequency-estimation},
+In his Ph.D.\ research \textit{Multiple fundamental frequency estimation of polyphonic recordings}~\cite{fundamental-frequency-estimation},
 Chunghsin Yeh classifies multi-pitch detection systems according to their estimation type into two categories: joint and
 iterative. The \textit{iterative} approach extracts the most eminent frequency per each iteration, until no other pitch
 can be estimated and extracted. Commonly, iterative estimators generate errors on each iteration but are much cheaper in
@@ -72,7 +72,7 @@ terms of computation costs.
 
 On the other side, the \textit{joint} estimation models evaluate combinations of pitches at once, which leads to
 increase in accuracy but also in computation costs. Most of the latest approaches and state-of-the-art solutions fall
-into joint category. Solution in this thesis also follows this category and will be discussed in detail in \cref{ch:analysis-and-design}.
+into the joint category. Solution in this thesis also follows this category and will be discussed in detail in \cref{ch:analysis-and-design}.
 
 \subsection{Feature-based multi-pitch detection}\label{subsec:feature-based-multi-pitch-detection}
 Most multi-pitch estimation and note tracking approaches exploit methods that come from signal processing. There is no
@@ -81,22 +81,22 @@ representation (spectrogram) either in an iterative or joint way. Usually, multi
 candidate set score function} or a \textit{pitch salience function}.
 
 A \textit{salience function} is a function that provides an estimation of the predominance of different frequencies in
-an audio signal at every time frame\cite{pitch-salience-function}. A \textit{pitch candidate set score function} is
-function designed to evaluate the plausibility of the combination of the hypothetical sources\cite{fundamental-frequency-estimation}.
+an audio signal at every time frame~\cite{pitch-salience-function}. A \textit{pitch candidate set score function} is
+a function designed to evaluate the plausibility of the combination of the hypothetical sources~\cite{fundamental-frequency-estimation}.
 
-These feature-based techniques have produced the best results in the \ac{MIREX} multi-pitch and note tracking
-evaluations. The work by Chunghsin Yeh\cite{fundamental-frequency-estimation} was the best performing method in
+These feature-based techniques have produced the best results in the \ac{MIREX}~\cite{mirex} multi-pitch and note
+tracking evaluations. The work by Chunghsin Yeh~\cite{fundamental-frequency-estimation} was the best performing method in
 the \ac{MIREX} multi-pitch and note tracking tasks. Yeh proposed a joint pitch estimation algorithm based on a pitch
 candidate set score function. Having a set of pitch candidates, the overlapping partials are detected and smoothed
 according to the spectral smoothness principle, which states that the spectral envelope\footnote{\textit{Spectral
 envelope} of the sound determines the particular vowel sound produced, and is, in general, one of the important acoustic
-features that determine its perceived timbre\cite{kumar2007hierarchical}.} of a musical sound tends to be slowly
+features that determine its perceived timbre~\cite{kumar2007hierarchical}.} of a musical sound tends to be slowly
 changing as a function of frequency. The score function for the pitch candidate set consists of four features:
 harmonicity, mean bandwidth, spectral centroid, and ``synchronicity'' (synchrony). A polyphony inference mechanism based
-on the score function increase selects the optimal pitch candidate set\cite{fundamental-frequency-estimation}.
+on the score function increase selects the optimal pitch candidate set~\cite{fundamental-frequency-estimation}.
 
 In the following year, the best performing method for the \ac{MIREX} multi-pitch estimation and note tracking tasks,
-Karin Dressler described in her work \textit{Multiple fundamental frequency extraction for MIREX}\cite{dressler2012multiple}.
+Karin Dressler described in her work \textit{Multiple fundamental frequency extraction for MIREX}~\cite{dressler2012multiple}.
 A multiresolution \ac{FFT} (see \cref{subsec:multiresolution-fft} on multiresolution \ac{FFT}) analysis was used as
 an input time/frequency representation, where the magnitude for each spectral bin was multiplied with the bin’s
 instantaneous frequency. Pitch estimation is made by identifying spectral peaks and performing pair-wise analysis on
@@ -104,24 +104,24 @@ them, resulting on ranked peaks according to harmonicity, smoothness, the appear
 number. Finally, the system tracks tones over time using an adaptive magnitude and a harmonic magnitude threshold.
 
 Other notable feature-based \ac{AMT} solution was introduced in the work by Pertusa and Inesta \textit{Multiple
-fundamental frequency estimation using Gaussian smoothness and short context}\cite{pertusa2008multiple}. They proposed
+fundamental frequency estimation using Gaussian smoothness and short context}~\cite{pertusa2008multiple}. They proposed
 a computationally inexpensive method for multi-pitch detection which computes a pitch salience function and evaluates
 combinations of pitch candidates using a measure of distance between a \ac{HPS} and a smoothed \ac{HPS}. Another
 approach for feature-based \ac{AMT} was proposed in \textit{Hybrid genetic algorithm based on gene fragment competition
-for polyphonic music transcription}\cite{reis2008hybrid}, which uses genetic algorithms for estimating a transcription
+for polyphonic music transcription}~\cite{reis2008hybrid}, which uses genetic algorithms for estimating a transcription
 by mutating the solution until it matches a similarity criterion between the original signal and the synthesized
 transcribed signal.
 
-More recently, Peter Grosche et al. proposed\cite{grosche2012automatic} an \ac{AMT} method based on a mid-level
+More recently, Peter Grosche et al. proposed~\cite{grosche2012automatic} an \ac{AMT} method based on a mid-level
 representation derived from a multiresolution \ac{FFT} combined with an instantaneous frequency estimation. His system
 also combines event (specifically start of the note) detection and tuning estimation for computing predictions. Finally,
-Juhan Nam et al. proposed\cite{nam2011classification} a classification-based approach for piano transcription using
-features learned from deep belief networks\cite{humphrey2013feature} for computing a mid-level time-pitch representation.
+Juhan Nam et al. proposed~\cite{nam2011classification} a classification-based approach for piano transcription using
+features learned from deep belief networks~\cite{humphrey2013feature} for computing a mid-level time-pitch representation.
 
 \subsection{Statistical model-based multi-pitch detection}\label{subsec:statistical-model-based-multi-pitch-detection}
 Many approaches in the literature formulate the multi-pitch estimation problem within a statistical framework. As
 Valentin Emiya et al. explains in their article \textit{Multipitch Estimation of Piano Sounds Using a New Probabilistic
-Spectral Smoothness Principle}\cite{proba-spectral-smoothness}: given an observed frame $\pmb{x}$ and a set $\pmb{C}$ of
+Spectral Smoothness Principle}~\cite{proba-spectral-smoothness}: given an observed frame $\pmb{x}$ and a set $\pmb{C}$ of
 all possible fundamental frequency combinations, the frame-based multi-pitch estimation problem can then be viewed as
 a \ac{MAP} estimation problem:
 
@@ -132,27 +132,27 @@ the set of all possible $F_0$ combinations, and $\pmb{x}$ is the observed audio 
 
 An example of \ac{MAP} estimation-based transcription is the \textit{PreFEst} system introduced by Masataka Goto in his
 article \textit{A real-time music-scene-description system: predominant-F0 estimation for detecting melody and bass
-lines in real-world audio signals}\cite{predominant-f0-estimation}, where each harmonic is modelled by a Gaussian
+lines in real-world audio signals}~\cite{predominant-f0-estimation}, where each harmonic is modelled by a Gaussian
 centered at its position on the log-frequency axis. \ac{EM} algorithm is used to estimate \ac{MAP} value.
 An extension of this method was proposed by Kameoka et al. in \textit{A Multipitch Analyzer Based on Harmonic Temporal
-Structured Clustering}\cite{harmonic-temporal-structured-clustering}, which jointly estimates multiple possible
+Structured Clustering}~\cite{harmonic-temporal-structured-clustering}, which jointly estimates multiple possible
 frequencies, moments of start and end of the note, and dynamics. Partials are modelled using Gaussians placed at
 the positions of partials in the log-frequency domain and the synchronous evolution of partials belonging to the same
 source is modelled by Gaussian mixtures.
 
 More recently, Peeling and Godsill, in their article \textit{Multiple pitch estimation using non-homogeneous Poisson
-processes}\cite{peeling2011multiple}, also proposed a likelihood function for multiple-pitch estimation where for a
+processes}~\cite{peeling2011multiple}, also proposed a likelihood function for multiple-pitch estimation where for a
 given time frame, the occurrence of peaks in the frequency domain is assumed to follow an inhomogeneous Poisson process.
 Also, Koretz and Tabrikian in \textit{Maximum a posteriori probability multiple-pitch tracking using the harmonic
-model}\cite{koretz2011maximum}, proposed an iterative method for multi-pitch estimation, which combines \ac{MAP} and
+model}~\cite{koretz2011maximum}, proposed an iterative method for multi-pitch estimation, which combines \ac{MAP} and
 \ac{ML} criteria. The predominant source is expressed using a harmonic model while the remaining harmonic signals are
-modelled as Gaussian interference sources\cite{koretz2011maximum}.
+modelled as Gaussian interference sources~\cite{koretz2011maximum}.
 
 \pagebreak
 
 \subsection{Spectrogram factorisation-based multi-pitch detection}\label{subsec:spectrogram-factorisation-based-multi-pitch-detection}
 The majority of recent multi-pitch detection papers utilise and expand spectrogram factorisation techniques. \ac{NMF} is
-a technique first introduced in their paper by Paris Smaragdis et al.\ \cite{smaragdis2003non} as a tool for music
+a technique first introduced in their paper by Paris Smaragdis et al.~\cite{smaragdis2003non} as a tool for music
 transcription. In its simplest form, the \ac{NMF} model decomposes an input spectrogram
 $\pmb{X} \in \mathbb{R}^{K \times N}_+$ with $K$ frequency bins and $N$ frames: \[ \pmb{X} \approx \pmb{WH} \]
 where $R \ll K, N$; $\pmb{W} \in \mathbb{R}^{K \times R}_+$ contains the spectral bases for each of the $R$ pitch
@@ -161,14 +161,14 @@ components; and $\pmb{H} \in \mathbb{R}^{R \times N}_+$ is the pitch activity ma
 In his paper \textit{Realtime multiple pitch observation using sparse non-negative constraints}, Cont Arshia applies
 \ac{NMF} to \ac{AMT} problem. Sparseness constraints were added into the \ac{NMF} update rules, in order to find
 meaningful transcriptions using a minimum number of non-zero elements in $\pmb{H}$. Emmanuel Vincent et al. in their
-article \textit{Adaptive harmonic spectral decomposition for multiple pitch estimation}\cite{vincent2009adaptive}
+article \textit{Adaptive harmonic spectral decomposition for multiple pitch estimation}~\cite{vincent2009adaptive}
 incorporated harmonicity constraints in the \ac{NMF} model, resulting in two algorithms: harmonic and inharmonic
 \ac{NMF}. The inharmonic version of the algorithm is also able to support deviations from perfect harmonicity and
-standard equal temperament tuning. Also, Nancy Bertin et al. in their article\cite{bertin2010enforcing} proposed
+standard equal temperament tuning. Also, Nancy Bertin et al. in their article~\cite{bertin2010enforcing} proposed
 a Bayesian framework for \ac{NMF}, which considers each pitch as a model of Gaussian components in harmonic positions.
 
 More recently, Ochiai et al. in his paper \textit{Explicit beat structure modeling for non-negative matrix
-factorization-based multipitch analysis}\cite{ochiai2012explicit} proposed an algorithm for multi-pitch detection and
+factorization-based multipitch analysis}~\cite{ochiai2012explicit} proposed an algorithm for multi-pitch detection and
 beat structure analysis. The \ac{NMF} objective function is constrained using information from the rhythmic structure of
 the recording. It helped to improve transcription accuracy in highly repetitive recordings.
 
@@ -181,43 +181,42 @@ Typically \ac{AMT} algorithms compute a time-pitch representation which needs to
 note events with a discrete pitch value, a time of start and end of the note. This process is called \textit{note
 tracking}. Most spectrogram factorisation-based methods estimate the binary piano-roll representation from the pitch
 activation matrix using simple thresholding (i.e.\ in \textit{Explicit beat structure modeling for non-negative matrix
-factorization-based multipitch analysis}\cite{grindlay2011transcribing} by Graham Grindlay and in \textit{Adaptive
-harmonic spectral decomposition for multiple pitch estimation}\cite{vincent2009adaptive} by Emmanuel Vincent). This
+factorization-based multipitch analysis}~\cite{grindlay2011transcribing} by Graham Grindlay and in \textit{Adaptive
+harmonic spectral decomposition for multiple pitch estimation}~\cite{vincent2009adaptive} by Emmanuel Vincent). This
 approach will be used in the implementation of the thesis. Also, one simple and fast optimisation for note tracking is
 minimum duration pruning, which is applied after thresholding (idea comes from paper by Arnaud Dessein et al.
-\textit{Real-time polyphonic music transcription with non-negative matrix factorization and beta-divergence}\cite{dessein2010real}).
+\textit{Real-time polyphonic music transcription with non-negative matrix factorization and beta-divergence}~\cite{dessein2010real}).
 Primary idea is that output notes that have a duration smaller than a predefined threshold are removed from the final
 score. Similar method was also used by Juan Pablo Bello et al. in their paper \textit{Automatic piano transcription
-using frequency and time-domain information}\cite{bello2006automatic}, where more complex rules for note tracking were
+using frequency and time-domain information}~\cite{bello2006automatic}, where more complex rules for note tracking were
 used, addressing cases such as where a small gap exists between two note events. This method will also be applied as it
 is easy to implement.
 
 For threshold based method, there are several issues that may appear for different instruments, primarily related to how
 notes are used and written for them in practice. For instance, for percussion instruments, note decay is exponential and
-physical duration of the note is irrelevant as it is not controlled(for most percussion instruments) by a musician. so
-notes may appear short and require pauses(rests) after them, even though they (rests) would not be written in sheet
+physical duration of the note is irrelevant as it is not controlled(for most percussion instruments) by a musician. This
+way notes may appear short and require pauses(rests) after them, even though the rests would not be written in sheet
 music. Such problems may be solved with other rule based solutions specific to each instrument that requires them or
-more complex approaches. Even though, in frameworks of this thesis, simple threshold-based solution was used for
-the note tracking task, it is important to know other approaches for this problem.
+more complex approaches.
 
-There were several more complex solutions applied to the problem of note tracking. Following are some of them, though
-without detailed description of the approach.
+Even though a simple threshold-based solution was used for the note tracking task, following paragraph discusses some
+more complex and more accurate solutions, though without detailed description of the approaches.
 
 \acp{HMM} are frequently used at a stage of postprocessing of note tracking. In his work \textit{A discriminative model
-for polyphonic piano transcription}\cite{poliner2006discriminative}, Graham Poliner proposes a note tracking method that
+for polyphonic piano transcription}~\cite{poliner2006discriminative}, Graham Poliner proposes a note tracking method that
 utilizes pitch-wise \acp{HMM}, where each \ac{HMM} has two states, indicating note activity and inactivity. \ac{HMM}
 parameters (state transitions and priors) were learned directly from a ground-truth training set, while the observation
 probability is given by the posteriogram output for a specific pitch.
 
-In \textit{Polyphonic music transcription using note event modeling}\cite{ryynanen2005polyphonic} by Matti P Ryynanen
+In \textit{Polyphonic music transcription using note event modeling}~\cite{ryynanen2005polyphonic} by Matti P Ryynanen
 and Anssi Klapuri, a feature-based multi-pitch detection system was combined with a musicological model for estimating
 musical key and note transition probabilities. Note events are described using 3-state \acp{HMM}, which model
 the envelope (attack, sustain, and noise/silence states) of each sound. In addition, context-dependent \acp{HMM} were
-employed in \textit{Automatic transcription of recorded music}\cite{grosche2012automatic} for determining note events by
-combining the output of a multi-pitch detection system with an note-start detection system.
+employed in \textit{Automatic transcription of recorded music}~\cite{grosche2012automatic} for determining note events by
+combining the output of a multi-pitch detection system with a note-start detection system.
 
-Finally, \acp{DBN} were proposed by Shigeki Sagayama et al. in their paper\cite{raczynski2009note} for note tracking.
-They used the pitch activation of an \ac{NMF}-based multi-pitch detection algorithm as input. The \ac{DBN} has a note
+Finally, \acp{DBN} were proposed by Shigeki Sagayama et al. in their paper~\cite{raczynski2009note} for note tracking.
+They used the pitch activation of a \ac{NMF}-based multi-pitch detection algorithm as input. The \ac{DBN} has a note
 layer in the lowest level, followed by a note combination layer. Model parameters were learned using MIDI files from
 F. Chopin piano pieces.
 
@@ -232,32 +231,32 @@ Most Western music has a harmonic organisation around one key. The key is genera
 sections of musical pieces. At one point in time, the harmony may be described by chord, which is a combinations of
 simultaneous or sequential notes which are perceived to belong together (and in general sound nice together, even though
 any combination of notes has its chord). Algorithms for key (and similarly for chord) detection use template matching or
-\acp{HMM}. For key detection, this theses uses the simple approach defined in \cref{sec:key-classification}.
+\acp{HMM}. For key detection, this thesis uses the simple approach defined in \cref{sec:key-classification}.
 
 \subsection{Tempo and time signature estimation}\label{subsec:tempo-and-time-signature-estimation}
 The \textit{beats} are regularly spaced in time pulses. They are the primary unit that defines tempo and rhythm of most
-Western music. A number of beats per unit of time (commonly per minute in sheet music) define \textit{tempo}. A number
-of beats per uniform repetitive sections in score (bars) define \textit{time signature}. In order to interpret an audio
+Western music. A number of beats per unit of time (commonly per minute in sheet music) defines a \textit{tempo}. A number
+of beats per uniform repetitive sections in score (bars) defines a \textit{time signature}. In order to interpret an audio
 recording in terms of such a structure (which is necessary in order to produce Western music notation), the first step
 is to determine the rate of the most salient pulse, which is the tempo.
 
 Algorithms used for tempo induction include autocorrelation, Fourier transforms, and periodicity transform, which are
 applied to audio features such as a note-start detection function (as Fabien Gouyon and Simon Dixon describe in their
-article \textit{A review of automatic rhythm description systems}\cite{gouyon2005review}). The next step involves
+article \textit{A review of automatic rhythm description systems}~\cite{gouyon2005review}). The next step involves
 estimating the timing of the beats constituting the main pulse, a task known as beat tracking. Again, numerous
 approaches have been proposed, such as rule-based methods (as in \textit{Computational models of beat induction:
-The rule-based approach}\cite{desain1999computational} by Peter Desain and Henkjan Honing), adaptive oscillators (as
-in \textit{Resonance and the perception of musical meter}\cite{large1994resonance} by Edward W Large and John F Kolen),
+The rule-based approach}~\cite{desain1999computational} by Peter Desain and Henkjan Honing), adaptive oscillators (as
+in \textit{Resonance and the perception of musical meter}~\cite{large1994resonance} by Edward W Large and John F Kolen),
 agent-based or multiple hypothesis trackers (as in \textit{Automatic extraction of tempo and beat from expressive
-performances}\cite{dixon2001automatic} by Simon Dixon), and other.
+performances}~\cite{dixon2001automatic} by Simon Dixon), and other.
 
 B\"{o}ck et. al. proposed a novel tempo estimation algorithm based on a recurrent neural network that learn an intermediate
 beat-level representation of the audio signal which is then feed to a bank of resonating comb filters to estimate
-the dominant tempo\cite{madmom}. This algorithm got the best score in ISMIR 2015 Audio Tempo Estimation task.
+the dominant tempo~\cite{madmom}. This algorithm got the best score in ISMIR 2015 Audio Tempo Estimation task.
 The implementation by the authors is included in the opensource \textit{Madmom} audio signal processing library which
 will be used in the implementation.
 
 The final step for rhythmic analysis consists of estimating the time signature, which indicates how beats are grouped
 and subdivided at respectively higher and lower metrical levels, and assigning each note-start and offset time to
-a position in this structure\cite{cemgil2011monte}.
+a position in this structure~\cite{cemgil2011monte}.
 
