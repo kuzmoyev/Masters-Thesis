@@ -1,5 +1,6 @@
 \documentclass[thesis=M,english,hidelinks]{FITthesis}[2012/10/20]
 
+
 \usepackage[utf8]{inputenc} % LaTeX source encoded as UTF-8
 \usepackage{graphicx} % graphics files inclusion
 \usepackage{dirtree} % directory tree visualisation
@@ -40,7 +41,15 @@
 \author{Yevhen Kuzmovych} %author's name without academic degrees
 \authorWithDegrees{Bc. Yevhen Kuzmovych} %author's name with academic degrees
 \supervisor{Ing. Marek Šmíd, Ph.D.}
-\acknowledgements{THANKS (remove entirely in case you do not with to thank anyone)}
+\acknowledgements{I would like to thank the supervisor of the work, Ing. Marek Šmíd, Ph.D.\ for the help in writing of
+this thesis, valuable advice and suggestions for improvement, thorough reviews, and extensive knowledge sharing in
+the fields of signal processing and ML.
+
+I want to express my special gratitude to my family, especially my parents, for their great support and help throughout
+the whole study and writing of this work\footnote{\foreignlanguage{russian}{Я бы хотел выразить особую благодарность
+моей семье, особенно моим родителям, за их большую поддержку и помощь на протяжении всего обучения и написания этой
+работы.}}.
+}
 
 \abstractCS{
 Přepis hudby hraje důležitou roli v oblasti získávání hudebních informací, a je to často složitý úkol i pro lidského
@@ -50,10 +59,10 @@ oddělení zdrojových nástrojů, by z něj mohli těžit. Podobně streamingov
 doporučovací systémy, atp.
 
 Tato práce zkoumá nejmodernější řešení, která kombinují analýzu signálů s přístupy strojového učení s učitelem pro
-uvedené problémy. Navrhuje implementaci, která je využita k provádění úlohy transkripce hudby s více nástroji, která má
+uvedené problémy. Navrhuje implemen\-taci, která je využita k provádění úlohy transkripce hudby s více nástroji, která má
 na vstupu surový zvukový soubor a produkuje sadu notových listů pro každý použitý nástroj na výstupu. Řešení je
 implementováno v programovacím jazyce Python jako modul a současně jako aplikace s rozhraním pro příkazovou řádku.
-Implementace je rozdělena do logických modulů zodpovědných za odhad odpovídajících částí výstupní partitury, jmenovitě
+Implementace je rozdělena do logických modulů zodpovědných za odhad odpoví\-dajících částí výstupní partitury, jmenovitě
 oddělení zdrojů, detekce výšek a událostí, odhad tempa, stupnice a taktového předznamenání. Takové oddělení umožňuje
 jednoduché rozšiřování a testování. Přesnost každého modulu je vyhodnocená na příslušných datových sadách.
 }
