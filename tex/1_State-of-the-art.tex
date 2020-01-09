@@ -17,7 +17,7 @@ on the standard \textit{musdb18}~\cite{musdb18} and \textit{DSD100}~\cite{SiSEC1
 Latest and most successful project in this field is \textit{Spleeter}~\cite{spleeter2019}. It is a project of
 Deezer\footnote{Deezer is a French online music streaming service (deezer.com).}. It takes similar approaches to previous solutions
 by University of London and Spotify~\cite{singing-voice-separation}. Spleeter's pre-trained models will be used in the
-module responsible for music source separation described in detail in the chapters~\ref{ch:analysis-and-design} and~\ref{ch:implementation}.
+module responsible for music source separation described in detail in chapters~\ref{ch:analysis-and-design} and~\ref{ch:implementation}.
 
 Following approaches are described in~\cite{spleeter2019,singing-voice-separation,singing-voice-separation-article}.
 
@@ -124,9 +124,7 @@ Valentin Emiya et al. explains in their article \textit{Multipitch Estimation of
 Spectral Smoothness Principle}~\cite{proba-spectral-smoothness}: given an observed frame $\pmb{x}$ and a set $\pmb{C}$ of
 all possible fundamental frequency combinations, the frame-based multi-pitch estimation problem can then be viewed as
 a \ac{MAP} estimation problem:
-
 \[ \hat{C}_{MAP} = \argmax_{C \in \pmb{C}} P(C|\pmb{x}) = \argmax_{C \in \pmb{C}} \frac{P(\pmb{x}|C)P(C)}{P(\pmb{x})} \]
-
 where $C = \{F_0^1, \dots, F_0^N\}$ is a set of possible frequencies (considering tuning of an instrument), $\pmb{C}$ is
 the set of all possible $F_0$ combinations, and $\pmb{x}$ is the observed audio signal within a single analysis frame.
 

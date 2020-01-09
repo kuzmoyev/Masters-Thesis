@@ -5,29 +5,29 @@ capable to perform such task is very wide-ranging. It can be utilized by musical
 that they have only in digital format (in \ac{WAVE} or MP3) or to train their pitch detection ability. The systems that
 are able to perform musical key detection (like \textit{Mixed in Key}\cite{mixed-in-keys}) are commercially successful
 and are very popular among DJs and music producers who use them for mixing the music. And in general music information
-retrieving can bring a deeper insight about musical structure, quality, genre, etc. that can be used for many important
-real world problems, including recommendation systems for streaming platforms.
+retrieving can bring a deeper insight into musical structure, quality, genre, etc. that can be used for many important
+real-world problems, including recommendation systems for streaming platforms.
 
 The problem of music transcription might be complicated even for a human listener, may be simpler for a trained
 musician, but it appears very complex for the automated system. Since 1970, a whole research community has formed
-and has been improving the quality of automated transcription and reduced the constrains required for producing it.
+and has been improving the quality of automated transcription and reduced the constraints required for producing it.
 
-But it is a still not a resolved problem and there is no such system that is capable to automatically and accurately
-convert a recording of the musical piece back into a sheet music or a set of commands that would replicate a recording
+But it is still not a resolved problem and there is no such system that is capable of automatically and accurately
+converting a recording of the musical piece back into sheet music or a set of commands that would replicate a recording
 on a music synthesizer.
 
 This thesis proposes the implementation and its architecture that attempts to solve the required tasks to generate
-the correct transcription of the given musical piece. The architecture separates solution for different problems into
+the correct transcription of the given musical piece. The architecture separates solutions for different problems into
 modules which allows for simple extension of the system and testing of individual approaches for the given problems.
 It also provides an estimated quality of each solution each evaluated on the appropriate datasets.
 
 \section{Problem definition}\label{sec:problem-definition}
 
-This thesis discusses the state-of-the art solutions for the different problems that underlie a task of music
+This thesis discusses the state-of-the-art solutions for the different problems that underlie a task of music
 transcription, namely: source instruments separation, pitch and event detection, musical key, tempo and time signature
 estimation that in combination determine necessary parts of the sheet music notation.
 
-Short introduction to a sheet music notation presented in \cref{ch:music_notation}.
+Short introduction to a sheet music notation is presented in \cref{ch:music_notation}.
 
 \subsection{Pitch estimation}\label{subsec:pitch-estimation}
 The difficulty of multi-pitch estimation lies in the fact that sound sources often overlap in time as well as in
@@ -39,7 +39,7 @@ ambiguity but also the ambiguity in the estimation of the number of sources.
 
 \subsection{Tuning}\label{subsec:tuning}
 Tuning, in general, is not a big problem for automated transcription systems. But it is important to note that recorded
-musical instruments may not be in tune or all the notes are tuned higher or lower but keeping the correct ration.
+musical instruments may not be in tune or all the notes are tuned higher or lower but keeping the correct ratios.
 Estimation of a tuning, if used correctly, may improve the accuracy of the output score.
 
 Another problem is that different tuning system can be used other than equal temperament, e.g.\ pythagorean tuning,
