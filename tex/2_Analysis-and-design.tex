@@ -11,7 +11,7 @@ the solution. Arrows represent data flow. Dotted arrows represent flow that is o
 tuning, tempo, time signature and key) are specified by user, they are not being estimated. Each rectangular block
 represents logical module in implementation.
 
-Detailed description of each component is in the dedicated section following the diagram on \cref{fig:architecture}.
+Detailed description of each component is in the dedicated section following the diagram in \cref{fig:architecture}.
 
 \image[0.74]{architecture}{pdf}{Architecture of the implementation.}
 
@@ -74,14 +74,14 @@ instrument and voice in time domain (as it would be represented in \ac{WAVE}), w
 More about \ac{FFT} is in the following section~\ref{sec:pitch-extraction} about pitch extraction.
 
 \section{Pitch extraction}\label{sec:pitch-extraction}
-As was mentioned in \cref{sec:multi-pitch-detection} there are many approaches to pitch (and specifically
+\cref{sec:multi-pitch-detection} analyses many approaches to pitch (and specifically
 to multi-pitch) detection. The one that is presented in this theses utilizes a combination of ideas defined in works
 of Matti P Ryynanen et al.~\cite{ryynanen2005polyphonic}, Arnaud Dessein et al.~\cite{dessein2010real} and Paris Smaragdis
 et al.~\cite{smaragdis2003non}. Solution is joint, thus estimates played notes at a given moment all at once (opposed to
 iterative approaches). It attempts to detect frequencies similarly to matrix factorization techniques through analysis
 of sound spectrogram. But instead of matrix factorization (\ac{NMF}), this work attempts to detect notes' events,
 specifically their envelopes (more on the sound envelope in \cref{subsec:sound-envelope}), using \ac{ML} models.
-Specification of the used data and training of the models is in the \cref{subsec:data-and-model-training}.
+Specification of the used data and training of the models is in \cref{subsec:data-and-model-training}.
 
 \pagebreak
 
@@ -96,7 +96,7 @@ produce different envelopes depending on a nature of sound extraction:
 
 \image{instrument-envelopes}{png}{Sound envelopes of piano and violin~\cite{sound-envelope}.}
 
-As seen on the \cref{fig:instrument-envelopes}, piano and any other instrument that produces sound by hitting, tapping
+As seen in \cref{fig:instrument-envelopes}, piano and any other instrument that produces sound by hitting, tapping
 or pinching of a string (like guitar, harp, bandura, balalaika, etc.), will produce similar envelope with defined
 attack (the moment of piano key pressing; pinching or hitting a string on guitar, etc.), decay and sustain (when piano
 key remains pressed or piano sustain pedal is used, etc.) and release (when piano key and sustain pedal are released,
@@ -127,11 +127,11 @@ Spleeter, used for source separation, is able to separate sound only into 5 sour
 from NSynth will be used to generate models.
 
 The preprocessing of the training dataset is completely the same as preprocessing of the sound samples during
-transcription. The whole data flow is shown on \cref{fig:pitch-detection}.
+transcription. The whole data flow is shown in \cref{fig:pitch-detection}.
 
 \image[1.15]{pitch-detection}{pdf}{Data flow for pitch detection.}
 
-As shown on \cref{fig:pitch-detection}, input stream (blue) is a stream of data read from input file or microphone (or
+As shown in \cref{fig:pitch-detection}, input stream (blue) is a stream of data read from input file or microphone (or
 any other input). It is read by chunks of size $c$ determined by implementation. Each window of $k$ chunks is passed
 through \ac{FFT} to transform data to a frequency domain. Taking several chunks of data to pass it through \ac{FFT}
 increases its accuracy, peaks of played pitches become more prominent and output becomes more robust to noise and phase
@@ -140,7 +140,7 @@ predictive model. Having $T$ chunks and window of size $k$, produced spectrogram
 a number of detected frequencies.
 
 After transforming input to time-frequency spectrogram (red), frequencies are translated to musical notes (green).
-Assuming equal temperament tuning and \textit{A} with 440Hz frequency (actual tuning will be estimated later in
+Assuming equal temperament tuning and \textit{A} with 440 Hz frequency (actual tuning will be estimated later in
 the analysis), frequencies are converted to the closest note. Frequencies converted to the same note are filtered
 to leave only the highest volume value.
 
@@ -156,23 +156,23 @@ with a time shift, starting the example from or ending it somewhere in the middl
 
 \section{Tuning classification}\label{sec:tunning-classification}
 Tuning of the instrument is not a part of score transcribed into sheet music and most of the Western music follows
-the same tuning system. Specifically, equal temperament system with \textit{A} tuned to 440Hz. But tuning estimation is
+the same tuning system. Specifically, equal temperament system with \textit{A} tuned to 440 Hz. But tuning estimation is
 an essential part for correct reproduction of the sound.
 
 There are two primary parts to tuning estimation: detection of frequency of base note, commonly \textit{A}:
 \figcenter{
 \lilypondfile{ly/analysis_and_design/base_a.ly}
-\caption{Base \textit{A} commonly tuned to 440Hz.}
+\caption{Base \textit{A} commonly tuned to 440 Hz.}
 }
 and tuning system, like equal temperament, pythagorean, meantone, etc. While tuning system in the Western music very
-rarely diverges from equal temperament, frequency of a base note can often be chosen to be different from 440Hz. That
+rarely diverges from equal temperament, frequency of a base note can often be chosen to be different from 440 Hz. That
 also often might happen for instruments that are often being retuned like guitars as tuning ``by ear'' by person that
 does not have a perfect pitch\footnote{\textit{Perfect pitch} or \textit{absolute pitch} is the ability to identify
 a note by hearing it. The ability is considered remarkably rare, estimated to be less than one in 10,000
 individuals~\cite{perfect-pitch}.} is defined by tuning of the string relative to which all other strings are tuned.
 
 Having found one played frequency $F$ in sound (or several frequencies for better precision), it is matched to
-the closest note $N$ in 440Hz-A-tuning, then real frequency of \textit{A} note $f(A)$ is calculated as:
+the closest note $N$ in 440-Hz-A-tuning, then real frequency of \textit{A} note $f(A)$ is calculated as:
 
 \[ f(A) = F * 2^\frac{t(N)-t(A)}{12} \]
 
@@ -191,7 +191,7 @@ the teeth in a comb, with very narrow, deep notches where signals are attenuated
 filters with different lags (delays) implementation of madmom detects at which lag the beat of the sound resonates
 the most. Given lag would then define a tempo.
 
-The range of possible tempo values (\ac{BPM}) $t$ is limited to $1 \le t \le 128$ and to only whole numbers. This is
+The range of possible tempo values (\ac{BPM}) $t$ is limited to $1 \le t \le 128$ and to whole numbers only. This is
 decided so that the range can include loops that last from only 1 beat to 128 beats, which would correspond to a maximum
 of 32 bars in $4\atop4$ meter.
 
@@ -221,9 +221,9 @@ can be used to forecast future values. Specifically its simpler version AR will 
 \[ Y_t = \alpha + \beta_1*Y_{t-1} + \beta_2*Y_{t-2} + \dots + \beta_n*Y_{t-n} + \epsilon_1 \]
 where $Y_t$ is value measured in time $t$, $\alpha$ is the intercept term, $\beta_k$ is coefficient of the first lag,
 and $\epsilon$ is a noise. All of $\beta$s and $\alpha$ are estimated by the model. The higher the absolute value
-$\beta_k$ - the higher the correlation between the signal and its copy delayed on lag $k$. Obviously the highest
-correlation of a signal is with its 0 lag. But as was mentioned above, the choice is limited to range $2 \le k \le 12$
-with 8 as a shortest note value. So the coefficient $\beta$ are estimated from 8th up to 32nd lag to determine time
+$\beta_k$ - the higher the correlation between the signal and its copy delayed by lag $k$. Obviously the highest
+correlation of a signal is with its 0 lag. But as was explained above, the choice is limited to range $2 \le k \le 12$
+with 8 as the shortest note value. So the coefficients $\beta$ are estimated from 8th up to 32nd lag to determine time
 signatures from $2\atop4$ (which in time is equivalent to $8\atop16$) up to $12\atop8$ (which in time is equivalent to
 $24\atop16$) and up to $8\atop4$ or $4\atop2$ (which in time are equivalent to $32\atop16$).
 
@@ -231,12 +231,12 @@ Technically any score for which appropriate $k$ was found, can be written within
 identify the best logical value for the number of beats per measure for simplification of reading of the score and
 convert the time signature to either $k/2\atop8$, $k/4\atop4$, or $k/8\atop2$.
 
-Having found a value of $k$, converting is performed according to a \cref{fig:time-signatures-table} as indicated by
+Having found a value of $k$, conversion is performed according to a \cref{fig:time-signatures-table} as indicated by
 green cells for even values of $k$. Odd values of $k$ are not expected as they are very unusual in measures of
-$k\atop16$. If they are odd time signature is left as is. Important to note that measures indicated by green cell are
-more common than their counterparts within a row but time signatures like $6\atop8$ and $2\atop2$ are also widely used
-in music. But it is hard to objectively identify which of the measures $6\atop8$ or $3\atop4$, $2\atop2$ or $4\atop4$
-should be used.
+$k\atop16$. If they are odd, the time signature is left as is. It is important to note that measures indicated by green
+cell are more common than their counterparts within a row but time signatures like $6\atop8$ and $2\atop2$ are also
+widely used in music. But it is hard to objectively identify which of the measures $6\atop8$ or $3\atop4$, $2\atop2$ or
+$4\atop4$ should be used.
 
 \begin{table}[]
 	\begin{center}
@@ -267,7 +267,7 @@ should be used.
 \section{Key classification}\label{sec:key-classification}
 Key signature is a part of sheet music notation that simplifies it by avoiding redundant repetitive accidentals (sharps
 and flats) and by defining the set of used notes which in its turn defines the set of used chords, their progressions
-and harmonic functions in a piece of music. Detailed description of key signature is in the \cref{subsec:key-signature}.
+and harmonic functions in a piece of music. Detailed description of key signature is in \cref{subsec:key-signature}.
 
 As was mentioned in \cref{subsec:key-and-chord-detection}, there are several approaches to key classification including
 template matching or \acp{HMM}. The best paid solution for key detection is \textit{Mixed In Key}~\cite{mixed-in-keys}
@@ -287,7 +287,7 @@ will be translated into
 \caption{Notes in a key of \textit{G major} (note a $\sharp$ on the \textit{F} line).}
 }
 
-Notes above are one \textit{F} (natural) and two of \textit{F}$\sharp$ from three different octaves. As there are more
+The notes above are one \textit{F} (natural) and two of \textit{F}$\sharp$ from three different octaves. As there are more
 \textit{F}$\sharp$ notes, output transcription will be in a key of \textit{G major}, that consists of notes \textit{G},
 \textit{A}, \textit{B}, \textit{C}, \textit{D}, \textit{E}, and \textit{F}$\sharp$.
 
@@ -297,8 +297,8 @@ their harmonic functions within the context of a given score.
 
 \section{Post processing}\label{sec:post-processing}
 
-Duration of the note is determine by its start (start of the sample passed to the model) and its end (moment, when
-note's volume lowers under the predefined threshold). As was mentioned in \cref{ch:state-of-the-art}, implementation
+Duration of the note is determined by its start (start of the sample passed to the model) and its end (moment, when
+note's volume lowers under the predefined threshold). As was discussed in \cref{ch:state-of-the-art}, implementation
 also utilizes several simple postprocessing ideas:
 \begin{itemize}
 	\item if the duration of the note is too short, it is omitted,
@@ -309,18 +309,18 @@ also utilizes several simple postprocessing ideas:
 Another goal of post processing module is the determination of the rests positions and their lengths. Rests fill in
 the gaps in a bar where no note is played. They are required to position notes correctly on the staff and subsequently
 in time for the musician.
-As for notes, it is needed to determine time of the rests' start and their length (whole rest, half rest, quoter rest,
+As for notes, it is needed to determine time of the rests' start and their length (whole rest, half rest, quarter rest,
 etc.). The process is fairly straightforward having the notes and their positions detected:
 
 \figcenter{
 \begin{algorithm}[H]
 	\For{each bar}{
 		\While{not the end of the bar}{
-			\eIf{any note starts at a current position}{
+			\eIf{any note starts at the current position}{
 				go to the end of the note\;
 			}{
 				mark start of the rest\;
-				go to the next note or an end of the bar whatever comes first and mark it as an end of a rest\;
+				go to the next note or an end of the bar whatever comes first and mark it as an end of the rest\;
 				determine the length of the rest from its start and end\;
 			}
 		}

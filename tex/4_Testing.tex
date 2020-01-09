@@ -1,4 +1,88 @@
 \chapter{Testing}\label{ch:testing}
 
+\section{Source separation}\label{sec:testing:source-separation}
+Commonly used source separation quality evaluation metrics are presented in a paper by Emmanuel Vincent et al.~\cite{vincent2006performance}.
+For a separating performance measures are computed for each estimated source $\hat{s}_j$ by comparing it to a given true
+source $s_j$. The computation of the criteria involves two successive steps. In a first step, they decompose $\hat{s}_j$
+as:
+\[\hat{s}_j = s_{target} + e_{interf} + e_{noise} + e_{artif}\]
+where $s_{target} = f(s_j)$ is a version of $s_j$ modified by an allowed distortion $f \in F$, and where $e_{interf}$,
+$e_{noise}$ and $e_{artif}$ are the interferences, noise, and artifacts error terms respectively. These four terms
+represent the parts of $\hat{s}_j$ that come from the real source $s_j$, from unwanted sources $(s_i)_{i \neq j}$, from
+noise, and from other causes. The performance of the model then is evaluated by 4 metrics:
+
+\begin{itemize}
+	\item \ac{SDR} = $10 \log_{10} \frac{\parallel s_{target} \parallel^2}{\parallel e_{interf} + e_{noise} + e_{artif} \parallel^2}$
+	\item \ac{SIR} = $10 \log_{10} \frac{\parallel s_{target} \parallel^2}{\parallel e_{interf} \parallel^2}$
+	\item \ac{SNR} = $10 \log_{10} \frac{\parallel s_{target} + e_{interf} \parallel^2}{\parallel e_{noise} \parallel^2}$
+	\item \ac{SAR} = $10 \log_{10} \frac{\parallel s_{target} + e_{interf} + e_{noise} \parallel^2}{\parallel e_{artif} \parallel^2}$
+\end{itemize}
+
+The Spleeter's performance measured on the standard musdb18 dataset~\cite{musdb18} comparing to \textit{Open-Unmix}~\cite{stoter19}
+implementation is shown in \cref{fig:spleeter-performance}.
+
+\begin{table}[]
+	\begin{center}
+		\begin{tabular}{l|cccc|cccc}
+			\hline
+			& SDR & SIR & SAR & ISR & SDR & SIR & SAR & ISR           \\ \hline \hline
+			& \multicolumn{4}{c|}{vocals}                                     & \multicolumn{4}{c}{bass}                                      \\ \hline
+			Spleeter & \textbf{6.88} & \textbf{15.86} & \textbf{6.99} & \textbf{12.01} & \textbf{5.51} & 10.30 & 5.96 & \textbf{9.61} \\
+			Open-Unmix & 6.32 & 13.33 & 6.52 & 11.93 & 5.23 & \textbf{10.93} & \textbf{6.34} & 9.23          \\ \hline \hline
+			& \multicolumn{4}{c|}{drums}                                     & \multicolumn{4}{c}{other}                                      \\ \hline
+			Spleeter & \textbf{6.71} & \textbf{13.67} & \textbf{6.54} & \textbf{10.69} & \textbf{4.55} & \textbf{8.16} & \textbf{4.88} & \textbf{9.87}  \\
+			Open-Unmix & 5.73 & 11.12 & 6.02 & 10.51 & 4.02 & 6.59 & 4.74 & 9.31           \\ \hline
+		\end{tabular}
+		\caption{Spleeter and Open-Unmix performances.}
+		\label{fig:spleeter-performance}
+	\end{center}
+\end{table}
 
 
+\section{Sound envelope detection}\label{sec:sound-envelope-detection}
+
+Sound envelope detection models were trained and tested on the \textit{nsynth} dataset~\cite{nsynth2017}. For
+the purposes of the model selection, the dataset generated from the \textit{nsynth} data was split into four cross
+validation folds. Performance results averaged among the folds are shown in \cref{fig:envelope-detection-performance}.
+
+\begin{table}[H]
+	\begin{center}
+		\hspace*{-1cm}\begin{tabular}{l|cc|ccc|ccc}
+			\hline
+								& \multicolumn{2}{c|}{time (s)} & \multicolumn{3}{c|}{test (\%)} & \multicolumn{3}{c}{train (\%)} \\
+	        model 				& fit & score & accuracy & precision & recall & accuracy & precision & recall \\ \hline \hline
+			MLP		 			& 6.22 & 0.05 & \textbf{65.0} & \textbf{70.8} & 57.3 & 67.3 & 72.4 & 60.6 \\
+			RandomForest 		& 3.72 & 0.48 & 64.6 & 66.6 & \textbf{61.7} & 1.00 & 1.00 & 1.00 \\
+			XGB 				& 2.45 & 0.08 & 64.3 & 67.0 & 60.3 & 67.1 & 70.1 & 63.2 \\
+			AdaBoost 			& 1.72 & 0.32 & 63.3 & 65.5 & 60.0 & 65.7 & 68.4 & 62.0 \\
+			DecisionTree 		& 0.25 & 0.03 & 59.4 & 59.4 & 59.4 & 59.9 & 59.8 & 60.0 \\
+			Logistic			& 0.12 & 0.02 & 58.0 & 57.6 & 59.0 & 1.00 & 1.00 & 1.00 \\
+			GaussianNB 			& 0.01 & 0.02 & 57.0 & 59.6 & 52.6 & 57.9 & 60.3 & 53.4 \\
+			KNeighbors 			& 0.01 & 0.93 & 51.2 & 52.2 & 48.2 & 60.3 & 61.9 & 57.3 \\ \hline
+		\end{tabular}
+		\caption{Envelope detection models' performance.}
+		\label{fig:envelope-detection-performance}
+	\end{center}
+\end{table}
+
+As seen from \cref{fig:envelope-detection-performance}, the best performing model is \textit{multilayer perceptron
+classifier}. It is a neural network with two hidden layers with 64 and 32 neurons respectively. It uses L2
+regularization with $\alpha=0.001$ and adam optimizer for learning.
+
+The accuracy of 65\% is not a competitive performance, so this part requires some tuning of hyperparameters, network
+topology, or a completely different approach.
+
+\subsection{Other modules}\label{subsec:other-modules}
+The \textit{key} estimation module does not need a testing dataset to evaluate its performance. It is simple rule
+based solution. Its accuracy is defined by ratio of musical pieces (say $k$) that follow its key - have more sharp notes
+for notes that have sharp symbol in the key signature and the same for flat and natural notes; and ratio of usage of
+major keys (as a major key is assumed by default in the implementation) among scores (say $p$). Having those two ratios
+the accuracy of this solution is $k*p$. Although the choice of the major or corresponding to it minor key does not
+affect the key signature, so accuracy for key signature estimation in output sheet music is just $k$.
+
+\textit{Madmom} does not provide evaluation of performance of \textit{tempo} estimation functionality. So it has been
+tested. The \ac{FMA} dataset~\cite{fma_dataset} was used for evaluation of \textit{madmom}'s tempo prediction. Even
+though tempo estimation seems like a regression problem, small inaccuracies of the predictions are equally as bad as
+big ones as they deteriorate the whole subsequent analysis. So the metric for the problem would be the accuracy that
+shows a ratio of correctly estimated tempos to the number of analysed songs. On the small version \ac{FMA} dataset with
+8000 30s songs, the accuracy of \textit{madmom}'s tempo estimation was 81.3\%.

@@ -43,33 +43,34 @@
 \acknowledgements{THANKS (remove entirely in case you do not with to thank anyone)}
 
 \abstractCS{
-Přepis hudby je důležitý, i když často složitý i pro lidského posluchače, úkol v oblasti získávání hudebních informací.
-Automatizace tohoto úkolu je ve velké poptávce mezi studenty hudby, kteří jej mohou použít pro nácvik rozpoznávání not a
-učení nových skladeb; hudební producenti a DJ, kteří by mohli využít funkce detekce stupnice a oddělení zdrojových
-nástrojů; streamingových platforem, které je mohou používat pro své doporučovací systémy; atd.
+Přepis hudby hraje důležitou roli v oblasti získávání hudebních informací, a je to často složitý úkol i pro lidského
+posluchače. Automatizace tohoto přepisu se těší velkému zájmu z řad studentů hudby, kteří jej mohou využít pro nácvik
+rozpoznávání not a učení nových skladeb. Také hudební producenti a DJ, kteří by mohli využít funkce detekce stupnice a
+oddělení zdrojových nástrojů, by z něj mohli těžit. Podobně streamingové platformy ho mohou používat pro své
+doporučovací systémy, atp.
 
-Tato práce zkoumá nejmodernější řešení, která kombinují analýzu signálů a přístupy strojového učení s učitelem pro
-uvedené problémy. Navrhuje implementaci, která je využívá k provádění úlohy transkripce hudby s více nástroji, která má
-na vstupu surový zvukový soubor a produkuje sadu notových listů pro každý přehrávaný nástroj na výstup. Řešení je
-implementováno v programovacím jazyce Python jako modul a aplikace s rozhraním pro příkazovou řádku. Implementace je
-rozdělena do logických modulů odpovědných za odhad odpovídajících částí výstupné partitury, jmenovitě oddělení zdroje,
-detekce výšky a události, odhad tempo, stupnice a taktového předznamenání. Takové oddělení umožňuje jednoduché rozšíření
-a testování. Přesnost každého modulu je vyhodnocená na příslušných datových sadách.
+Tato práce zkoumá nejmodernější řešení, která kombinují analýzu signálů s přístupy strojového učení s učitelem pro
+uvedené problémy. Navrhuje implementaci, která je využita k provádění úlohy transkripce hudby s více nástroji, která má
+na vstupu surový zvukový soubor a produkuje sadu notových listů pro každý použitý nástroj na výstupu. Řešení je
+implementováno v programovacím jazyce Python jako modul a současně jako aplikace s rozhraním pro příkazovou řádku.
+Implementace je rozdělena do logických modulů zodpovědných za odhad odpovídajících částí výstupní partitury, jmenovitě
+oddělení zdrojů, detekce výšek a událostí, odhad tempa, stupnice a taktového předznamenání. Takové oddělení umožňuje
+jednoduché rozšiřování a testování. Přesnost každého modulu je vyhodnocená na příslušných datových sadách.
 }
 \abstractEN{
-Music transcription is important though complex, often even for a human listener, task in a field of music information
+Music transcription is important though complex, often even for a human listener, task in the field of music information
 retrieval. Automation of such task is in a big demand among musical students, who can use it for practicing of note
 recognition and learning of the new pieces; music producers and DJs, who could utilize its key detection and source
-instrument separation functionality, streaming platforms that may use it for their recommendation systems; etc.
+instrument separation functionality; streaming platforms that may use it for their recommendation systems; etc.
 
 This thesis explores state-of-the-art solutions that combine signal analysis and supervised machine learning
 approaches for the mentioned problems. It proposes implementation that utilizes them to perform a multiple-instrument
-music transcription task having a raw audio file on input and producing a set of sheet music scores for each played
+music transcription task having a raw audio file on the input and producing a set of sheet music scores for each played
 instrument on the output. The solution is implemented in the Python programming language as a module as well as
-a command-line interface application. Implementation is separated into logical modules responsible for estimating of
+a command-line interface application. The implementation is separated into logical modules responsible for estimation of
 the corresponding parts of the output score, namely source separation, pitch and event detection, tempo, key and time
 signature estimation. Such separation allows for simple expansion and testing. The performance of each module is
-evaluated on the appropriate datasets.
+evaluated on an appropriate datasets.
 }
 \keywordsCS{Přepis hudby, zpracování zvuku, analýza signálu, učení s učitelem.}
 \keywordsEN{Music transcription, audio processing, signal analysis, supervised learning.}
@@ -176,6 +177,8 @@ evaluated on the appropriate datasets.
 	\acro{SIR}{Source to Interferences Ratio}
 	\acro{SNR}{Sources to Noise Ratio}
 	\acro{SAR}{Sources to Artifacts Ratio}
+	\acro{FMA}{Free Music Archive}
+	\acro{MIR}{Music Information Retrieval}
 
 \end{acronym}
 
@@ -190,13 +193,11 @@ evaluated on the appropriate datasets.
 \begin{figure}
 	\dirtree{%
 		.1 readme.txt\DTcomment{the file with CD contents description}.
-		.1 exe\DTcomment{the directory with executables}.
 		.1 src\DTcomment{the directory of source codes}.
-		.2 wbdcm\DTcomment{implementation sources}.
+		.2 mimt\DTcomment{implementation sources}.
 		.2 thesis\DTcomment{the directory of \LaTeX{} source codes of the thesis}.
 		.1 text\DTcomment{the thesis text directory}.
 		.2 thesis.pdf\DTcomment{the thesis text in PDF format}.
-		.2 thesis.ps\DTcomment{the thesis text in PS format}.
 	}
 \end{figure}
 

@@ -40,7 +40,7 @@ The goal of the neural network architecture is to predict the vocal and instrume
 the output of the final decoder layer is a soft mask for each source that is multiplied element-wise with the mixed
 spectrogram to obtain the final estimate.
 
-\image{u-net-architecture}{pdf}{Network Architecture~\cite{singing-voice-separation}}
+\image{u-net-architecture}{pdf}{U-net's network architecture~\cite{singing-voice-separation}}
 
 \pagebreak
 
@@ -58,7 +58,7 @@ sources (expected outputs) together.
 
 
 \section{Multi-pitch Detection}\label{sec:multi-pitch-detection}
-There were several projects utilizing different approaches to a problem of \ac{AMT}. Following section discuss these
+There were several projects utilizing different approaches to a problem of \ac{AMT}. Following sections discuss these
 approaches and projects that used them.
 
 The most important part of transcription of sound into sheet music is pitch (and subsequently note) detection. The core
@@ -97,11 +97,11 @@ on the score function increase selects the optimal pitch candidate set~\cite{fun
 
 In the following year, the best performing method for the \ac{MIREX} multi-pitch estimation and note tracking tasks,
 Karin Dressler described in her work \textit{Multiple fundamental frequency extraction for MIREX}~\cite{dressler2012multiple}.
-A multiresolution \ac{FFT} (see \cref{subsec:multiresolution-fft} on multiresolution \ac{FFT}) analysis was used as
-an input time/frequency representation, where the magnitude for each spectral bin was multiplied with the bin’s
-instantaneous frequency. Pitch estimation is made by identifying spectral peaks and performing pair-wise analysis on
-them, resulting on ranked peaks according to harmonicity, smoothness, the appearance of intermediate peaks, and harmonic
-number. Finally, the system tracks tones over time using an adaptive magnitude and a harmonic magnitude threshold.
+A multiresolution \ac{FFT} analysis was used as an input time/frequency representation, where the magnitude for each
+spectral bin was multiplied with the bin’s instantaneous frequency. Pitch estimation is made by identifying spectral
+peaks and performing pair-wise analysis on them, resulting on ranked peaks according to harmonicity, smoothness,
+the appearance of intermediate peaks, and harmonic number. Finally, the system tracks tones over time using an adaptive
+magnitude and a harmonic magnitude threshold.
 
 Other notable feature-based \ac{AMT} solution was introduced in the work by Pertusa and Inesta \textit{Multiple
 fundamental frequency estimation using Gaussian smoothness and short context}~\cite{pertusa2008multiple}. They proposed
@@ -251,10 +251,10 @@ agent-based or multiple hypothesis trackers (as in \textit{Automatic extraction 
 performances}~\cite{dixon2001automatic} by Simon Dixon), and other.
 
 B\"{o}ck et. al. proposed a novel tempo estimation algorithm based on a recurrent neural network that learn an intermediate
-beat-level representation of the audio signal which is then feed to a bank of resonating comb filters to estimate
+beat-level representation of the audio signal which is then fed to a bank of resonating comb filters to estimate
 the dominant tempo~\cite{madmom}. This algorithm got the best score in ISMIR 2015 Audio Tempo Estimation task.
-The implementation by the authors is included in the opensource \textit{Madmom} audio signal processing library which
-will be used in the implementation.
+The implementation by the authors is included in the opensource \textit{Madmom} audio signal processing
+library\footnote{https://pypi.org/project/madmom/} which will be used in the implementation.
 
 The final step for rhythmic analysis consists of estimating the time signature, which indicates how beats are grouped
 and subdivided at respectively higher and lower metrical levels, and assigning each note-start and offset time to

@@ -1,11 +1,24 @@
 \chapter{Conclusion}\label{ch:conclusion}
 
+This thesis introduces a reader to the problem of automated transcription of a multi-instrument sound recording to
+a sheet music. It discusses a state-of-the-art solutions to the tasks of a source instruments separation, pitch
+detection, key and time signatures estimation, etc.
 
-\section{Possible improvements}
+The goal has been reached at a sufficient level. The analysis and design of the implementation allows for future
+expansion and improvement of quality of the processing pipeline.
 
-Chords estimation, crescendo - descendo
+\section{Possible improvements}\label{sec:possible-improvements}
 
-Key note probability
+Implementation does not take into consideration the \textit{dynamics} of the notes. Dynamic of a sound describes its
+amplitude or loudness (\pp, \p, \mf, \f, \ff, etc.), its emotional intensity and change through time (crescendo,
+decrescendo). It is often an inalienable part of the description of the generated sound, hence a part of the output
+sheet music. The solution to this task could be simple rule based or more complex that utilize \ac{ML} or statistical
+analysis.
 
-Multiresolution FFT
-https://pdfs.semanticscholar.org/d55f/984d569786e1bbf945f7683361ffbbfff79a.pdf
+Another optimization for pitch detection could be usage of \textit{Multiresolution \ac{FFT}}. This method is widely-used
+in a field of \ac{MIR} tasks. The frequency components of a \ac{DFT} are equally spaced and have a constant resolution.
+However, in polyphonic music a higher frequency resolution is needed in the low and mid frequencies where there is
+a higher density of harmonics. On the other hand, frequency modulation gets stronger as the number of harmonic is
+increased, requiring shorter windows for improved time resolution~\cite{cancela2009efficient}. Thus, a multi resolution
+spectral representation is highly desired for the analysis of music signals and can be a great improvement for the pitch
+detection module of this implementation.
